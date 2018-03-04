@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public class MyApplication extends Application {
 
-    private BeaconManager beaconManager;
+    public static BeaconManager beaconManager;
 
     @Override
     public void onCreate() {

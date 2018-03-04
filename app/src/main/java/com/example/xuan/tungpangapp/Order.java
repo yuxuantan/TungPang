@@ -14,17 +14,18 @@ public class Order {
     private long estimatedTimeOfDelivery;
     private long deliveryManUserID;
     private long customerUserID;
-    private String beaconID;
+    private long beaconIDMajor;
+    private long beaconIDMinor;
+
     //String or lat long?? must convert if Lat long
     private String deliveryLocation;
     // 0-“unassigned”, 1-“deliveryInProcess”, 2-“completed”
     private int status;
 
-
-
     private String restaurantName;
 
-    public Order(long orderID, long restaurantID, String menuItem, double menuPrice, double commissionPrice, long estimatedTimeOfDelivery, long deliveryManUserID, long customerUserID, String beaconID, String deliveryLocation, int status, String restaurantName) {
+
+    public Order(long orderID, long restaurantID, String menuItem, double menuPrice, double commissionPrice, long estimatedTimeOfDelivery, long deliveryManUserID, long customerUserID, long beaconIDMajor, long beaconIDMinor, String deliveryLocation, int status, String restaurantName) {
         this.orderID = orderID;
         this.restaurantID = restaurantID;
         this.menuItem = menuItem;
@@ -33,10 +34,19 @@ public class Order {
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
         this.deliveryManUserID = deliveryManUserID;
         this.customerUserID = customerUserID;
-        this.beaconID = beaconID;
+        this.beaconIDMajor = beaconIDMajor;
+        this.beaconIDMinor = beaconIDMinor;
         this.deliveryLocation = deliveryLocation;
         this.status = status;
         this.restaurantName = restaurantName;
+    }
+
+    public long getBeaconIDMinor() {
+        return beaconIDMinor;
+    }
+
+    public void setBeaconIDMinor(long beaconIDMinor) {
+        this.beaconIDMinor = beaconIDMinor;
     }
 
     public String getRestaurantName() {
@@ -110,12 +120,12 @@ public class Order {
         this.customerUserID = customerUserID;
     }
 
-    public String getBeaconID() {
-        return beaconID;
+    public long getbeaconIDMajor() {
+        return beaconIDMajor;
     }
 
-    public void setBeaconID(String beaconID) {
-        this.beaconID = beaconID;
+    public void setbeaconIDMajor(long beaconIDMajor) {
+        this.beaconIDMajor = beaconIDMajor;
     }
 
     public String getDeliveryLocation() {
@@ -145,9 +155,11 @@ public class Order {
                 ", estimatedTimeOfDelivery=" + estimatedTimeOfDelivery +
                 ", deliveryManUserID=" + deliveryManUserID +
                 ", customerUserID=" + customerUserID +
-                ", beaconID='" + beaconID + '\'' +
+                ", beaconIDMajor=" + beaconIDMajor +
+                ", beaconIDMinor=" + beaconIDMinor +
                 ", deliveryLocation='" + deliveryLocation + '\'' +
                 ", status=" + status +
+                ", restaurantName='" + restaurantName + '\'' +
                 '}';
     }
 }

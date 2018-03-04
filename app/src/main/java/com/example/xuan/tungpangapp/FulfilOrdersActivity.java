@@ -28,70 +28,35 @@ import java.util.UUID;
 
 public class FulfilOrdersActivity extends AppCompatActivity {
 
-    private List<Order> unassignedOrders;
-    private List<Order> allOrders;
+    //LIST OF ORDERS BEFORE LOCATION FILTER - For now is static list
+    private static List<Order> allOrders;
 
-    private List<String> unassignedRestaurantNames;
-    private BeaconManager beaconManager;
-    private BeaconRegion region;
+    private static List<Order> unassignedOrders;
+    private static List<String> unassignedRestaurantNames = new ArrayList<>();
 
-    private static final Map<String, List<String>> PLACES_BY_BEACONS;
 
-    // TODO: replace "<major>:<minor>" strings to match your own beacons.
+//    private static final Map<String, List<String>> PLACES_BY_BEACONS;
+
+    //    // TODO: replace "<major>:<minor>" strings to match your own beacons.
     static {
-
-        // At the start populate from restaurant DB - get all restaurant name, restaurant ID and beaconID
-
-        Map<String, List<String>> placesByBeacons = new HashMap<>();
-        placesByBeacons.put("6722:37991", new ArrayList<String>() {{
-            add("Koufu");
-            add("101");
-        }});
-        placesByBeacons.put("648:12", new ArrayList<String>() {{
-            add("Waterloo");
-            add("102");
-        }});
-        PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
-    }
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fulfil_orders);
-
-        beaconManager = new BeaconManager(getApplicationContext());
-        beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
-                Log.d("Status","ENTER");
-            }
-            @Override
-            public void onExitedRegion(BeaconRegion region) {
-                // could add an "exit" notification too if you want (-:
-                Log.d("Status", "Exit");
-            }
-        });
-
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startMonitoring(new BeaconRegion(
-                        "monitored region",
-                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null));
-
-//                                6722, 37991));
-
-            }
-        });
-
+//
+//        // At the start populate from restaurant DB - get all restaurant name, restaurant ID and beaconID
+//
+//        Map<String, List<String>> placesByBeacons = new HashMap<>();
+//        placesByBeacons.put("6722:37991", new ArrayList<String>() {{
+//            add("Koufu");
+//            add("101");
+//        }});
+//        placesByBeacons.put("648:12", new ArrayList<String>() {{
+//            add("Waterloo");
+//            add("102");
+//        }});
+//        PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
         // Get Orders
         // HARD CODED PORTION
         // ** Add only orders that have status==0 ie. "unassigned" into the lists
         allOrders = new ArrayList<>();
-        unassignedOrders = new ArrayList<>();
-        unassignedRestaurantNames = new ArrayList<>();
+
         allOrders.add(new Order(1,
                 101,
                 "Chicken Rice",
@@ -100,7 +65,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 20,
                 13,
                 24,
-                "ABCDEFG1234asdf",
+                6722,
+                37991,
                 "SIS GSR 2-3",
                 0,
                 "Koufu"));
@@ -113,10 +79,26 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 20,
                 13,
                 24,
-                "ABCDEFG1234asdf",
+                648,
+                123,
                 "SIS GSR 2-3",
                 0,
                 "Waterloo"));
+
+        unassignedOrders = new ArrayList<>();
+        unassignedRestaurantNames = new ArrayList<>();
+//        for(Order o: unassignedOrders){
+//            unassignedRestaurantNames.add(o.getRestaurantName());
+//        }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fulfil_orders);
+
+
 
 //************************ LIST VIEW SET
 
@@ -153,7 +135,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                 unassignedRestaurantNames.remove(position);
                                 unassignedOrders.remove(position);
                                 adapter.notifyDataSetChanged();
-                                // Remove from actual DB - after API is set up
+                                // Remove from actual DB using API - after API is set up
                             }
                         });
                 alertDialog.show();
@@ -161,25 +143,69 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         });
         //***************************
 
+//        beaconManager= new BeaconManager(getApplicationContext());
+        MyApplication. beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
+                // Update list
+                Log.d("Status","enter: Major - " + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor());
+                adapter.clear();
+                refreshList(beacons);
+                adapter.notifyDataSetChanged();
 
+            }
+            @Override
+            public void onExitedRegion(BeaconRegion region) {
+                // Update List  + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor()
+                Log.d("Status","Exit: Major - ");
+                adapter.clear();
+                refreshList(new ArrayList<Beacon>());
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+
+//        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+//            @Override
+//            public void onServiceReady() {
+//                beaconManager.startMonitoring(new BeaconRegion(
+//                        "monitored region",
+//                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null));
+//
+////                                6722, 37991));
+//
+//            }
+//        });
 
     }
 
-    private List<String> placesNearBeacon(Beacon beacon) {
-        String beaconKey = String.format("%d:%d", beacon.getMajor(), beacon.getMinor());
-        if (PLACES_BY_BEACONS.containsKey(beaconKey)) {
-            return PLACES_BY_BEACONS.get(beaconKey);
+
+    private void refreshList(List<Beacon> beacons){
+
+        //CONNECT TO DB, pull list of unassigned and set here!! unassignedOrders = ??, Filter again
+        // Set ArrayLists
+        Log.d("Refreshed", ""+allOrders.size());
+        unassignedOrders.clear();
+
+        for(Order o : allOrders){
+//            Log.d("Refreshed", ""+o.getbeaconIDMajor()+", "+beacon.getMajor());
+            for(Beacon beacon : beacons){
+
+                if(beacon.getMajor()==o.getbeaconIDMajor() && beacon.getMinor()==o.getBeaconIDMinor()){
+                    unassignedOrders.add(o);
+
+                }
+
+            }
         }
-        return Collections.emptyList();
-    }
+        unassignedRestaurantNames.clear();
 
+        for(Order o: unassignedOrders){
+            unassignedRestaurantNames.add(o.getRestaurantName());
+        }
+        Log.d("Refreshed", unassignedRestaurantNames.toString());
 
-    private void refreshList(){
-        // Stop monitoring
-
-        //CONNECT TO DB, pull list of unassigned and set here!!
-
-        //
 
     }
 
