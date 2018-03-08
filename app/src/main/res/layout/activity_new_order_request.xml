@@ -4,12 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewOrderRequestActivity">
+    tools:context=".NewOrderRequestActivity"
+    android:orientation="vertical">
 
-    <ListView
+    <TextView
+        android:layout_marginTop="100dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/restaurant_list">
-    </ListView>
+        android:layout_height="wrap_content"
+        android:text="Food Outlet"
+        android:textColor="#000000"
+        android:textSize="30dp" />
+
+    <Spinner
+        android:id="@+id/food_Outlet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        style="@style/Widget.AppCompat.Spinner.Underlined" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Tip Amount"
+        android:textColor="#000000"
+        android:textSize="30dp" />
+
+    <Spinner
+        android:layout_marginTop="20dp"
+        android:id="@+id/tip_Amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Spinner.Underlined"/>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Order Request"
+        android:textSize="30dp"
+        android:textColor="#000000"/>
+
+    <Spinner
+        android:layout_marginTop="20dp"
+        android:id="@+id/order_Request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Spinner.Underlined"/>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Meetup Location"
+        android:textSize="30dp"
+        android:textColor="#000000"/>
+
+    <Spinner
+        android:layout_marginTop="20dp"
+        android:id="@+id/meetup_Location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
 </LinearLayout>
