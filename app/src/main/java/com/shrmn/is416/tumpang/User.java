@@ -81,6 +81,15 @@ public class User {
         return telegramUsername == null ? null : "https://t.me/" + telegramUsername;
     }
 
+    public String displayName() {
+        if(name != null) {
+            return name;
+        } else if (telegramUsername != null) {
+            return "@" + telegramUsername;
+        }
+        return null;
+    }
+
     public void setTelegramUsername(String telegramUsername) {
         if(telegramUsername != null && !telegramUsername.isEmpty()) {
             // Strip whitespace

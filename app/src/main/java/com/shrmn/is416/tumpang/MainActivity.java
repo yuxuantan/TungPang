@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
+
+import static com.shrmn.is416.tumpang.MyApplication.user;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
                     DialogFragment dialog = new FirstRunDialog();
                     dialog.show(getSupportFragmentManager(), "FirstRunDialog");
                 } else {
+                    TextView labelWelcome = findViewById(R.id.label_welcome);
+                    String displayName = user.displayName();
+                    if(displayName != null) labelWelcome.setText("Welcome, " + displayName + "!");
                     Log.d(TAG, "onVariableChanged: Not a first run.");
                 }
             }
