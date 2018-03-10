@@ -6,4 +6,5 @@
     <color name="colorButtonText">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorTextHeading">#000000</color>
+    <color name="ic_launcher_background">#FF6161</color>
 </resources>

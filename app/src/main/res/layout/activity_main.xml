@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.shrmn.is416.tumpang.MainActivity">
 
+    <ImageView
+        android:id="@+id/image_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo_grey"
+        android:tag="logo"
+        app:layout_constraintBottom_toTopOf="@id/newOrderRequestButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/newOrderRequestButton"
         android:layout_width="match_parent"

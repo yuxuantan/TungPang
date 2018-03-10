@@ -17,7 +17,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
         Spinner dynamicSpinner = (Spinner) findViewById(R.id.food_Outlet);
 
-        String[] items = new String[] { "Chai Latte", "Green Tea", "Black Tea" };
+        String[] items = new String[]{"Chai Latte", "Green Tea", "Black Tea"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, items);

@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newOrderRequest(View view) {
-        Intent ptg = new Intent( this, NewOrderRequestActivity.class);
+        Intent ptg = new Intent(this, NewOrderRequestActivity.class);
         startActivity(ptg);
     }
 
