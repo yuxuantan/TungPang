@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
+import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +37,7 @@ public class MyApplication extends Application {
     public static FirebaseFirestore db;
     private static String uniqueID = null;
     private static User user;
-    private boolean isFirstRun = false;
+    public static FirstRunVariable firstRunVariable;
 
     // Extracted from https://medium.com/@ssaurel/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
     public synchronized static String id(Context context) {
@@ -59,6 +61,8 @@ public class MyApplication extends Application {
         // Obtain Unique ID and save into this.uniqueID
         id(getApplicationContext());
         Log.d(TAG, "User Unique ID: " + uniqueID);
+
+        firstRunVariable = new FirstRunVariable();
 
         // Abstracted these parts into subroutines
         initialiseBeaconSubsystem();
@@ -139,7 +143,8 @@ public class MyApplication extends Application {
                             } else {
                                 Log.d(TAG, "No User document with ID " + uniqueID + "; Adding to database.");
                                 addUserToDB();
-                                isFirstRun = true;
+                                // Call variable change listener to tell MainActivity that we are the first run!
+                                firstRunVariable.firstRun();
                             }
                         }
                     }

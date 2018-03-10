@@ -84,6 +84,10 @@ public class User {
         this.name = name;
     }
 
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
