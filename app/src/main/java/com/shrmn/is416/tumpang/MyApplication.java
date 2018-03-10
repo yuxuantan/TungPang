@@ -23,7 +23,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
-import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
 
 import java.util.List;
 import java.util.UUID;
@@ -153,17 +152,11 @@ public class MyApplication extends Application {
                             if (document != null && document.exists()) {
                                 user = document.toObject(User.class);
                                 Log.d(TAG, "Existing user; Loaded: " + user);
-
-                                // We need the user's Telegram Username in order for the app to fully function
-                                if(TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN && user.getTelegramUsername() == null) {
-                                    firstRunVariable.firstRun();
-                                }
                             } else {
                                 Log.d(TAG, "No User document with ID " + uniqueID + "; Adding to database.");
                                 addUserToDB();
-                                // Call variable change listener to tell MainActivity that we are the first run!
-                                firstRunVariable.firstRun();
                             }
+                            firstRunVariable.setFirstRun(user == null || (user.getTelegramUsername() == null && TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN));
                         }
                     }
                 });

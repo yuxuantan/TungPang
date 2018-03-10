@@ -22,9 +22,14 @@ public class MainActivity extends AppCompatActivity {
         MyApplication.firstRunVariable.setVariableChangeListener(new VariableChangeListener() {
             @Override
             public void onVariableChanged(Object... variableThatHasChanged) {
-                Log.d(TAG, "onCreate: Detected first-run, presenting FirstRunDialog");
-                DialogFragment dialog = new FirstRunDialog();
-                dialog.show(getSupportFragmentManager(), "FirstRunDialog");
+                boolean isFirstRun = (Boolean) variableThatHasChanged[0];
+                if(isFirstRun) {
+                    Log.d(TAG, "onVariableChanged: Detected first-run, presenting FirstRunDialog");
+                    DialogFragment dialog = new FirstRunDialog();
+                    dialog.show(getSupportFragmentManager(), "FirstRunDialog");
+                } else {
+                    Log.d(TAG, "onVariableChanged: Not a first run.");
+                }
             }
         });
     }

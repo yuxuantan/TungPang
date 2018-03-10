@@ -8,11 +8,9 @@ public class FirstRunVariable {
         return isFirstRun;
     }
 
-    public void firstRun() {
-        if(!isFirstRun) {
-            isFirstRun = true;
-            if(variableChangeListener != null) variableChangeListener.onVariableChanged();
-        }
+    public void setFirstRun(boolean firstRun) {
+        isFirstRun = firstRun;
+        if(variableChangeListener != null) variableChangeListener.onVariableChanged(isFirstRun);
     }
 
     public void setVariableChangeListener(VariableChangeListener variableChangeListener) {
