@@ -1,5 +1,6 @@
 package com.shrmn.is416.tumpang;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +14,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newOrderRequest(View view) {
+        Intent ptg = new Intent( this, NewOrderRequestActivity.class);
+        startActivity(ptg);
     }
 
     public void fulfilOrderOrderRequest(View view) {
+        Intent ptg = new Intent(this, FulfilOrdersActivity.class);
+        startActivity(ptg);
     }
 }

@@ -3,7 +3,9 @@
     package="com.shrmn.is416.tumpang">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
+        android:configChanges="orientation|screenSize"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -16,6 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".NewOrderRequestActivity" />
+        <activity android:name=".FulfilOrdersActivity"></activity>
     </application>
 
 </manifest>

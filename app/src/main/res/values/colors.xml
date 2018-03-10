@@ -5,4 +5,5 @@
     <color name="colorButton">#0ABAB5</color>
     <color name="colorButtonText">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorTextHeading">#000000</color>
 </resources>

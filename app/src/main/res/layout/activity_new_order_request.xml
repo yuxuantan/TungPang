@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.shrmn.is416.tumpang.NewOrderRequestActivity">
+
+    <TextView
+        android:id="@+id/label_outlet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Food Outlet"
+        android:textColor="@color/colorTextHeading"
+        android:textSize="30dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/food_Outlet"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/label_outlet" />
+
+    <TextView
+        android:id="@+id/label_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Tip Amount"
+        android:textColor="@color/colorTextHeading"
+        android:textSize="30dp"
+        app:layout_constraintTop_toBottomOf="@id/food_Outlet" />
+
+    <Spinner
+        android:id="@+id/tip_Amount"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/label_amount" />
+
+    <TextView
+        android:id="@+id/label_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Order Request"
+        android:textColor="@color/colorTextHeading"
+        android:textSize="30dp"
+        app:layout_constraintTop_toBottomOf="@id/tip_Amount" />
+
+    <Spinner
+        android:id="@+id/order_Request"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/label_request" />
+
+    <TextView
+        android:id="@+id/label_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Meetup Location"
+        android:textColor="@color/colorTextHeading"
+        android:textSize="30dp"
+        app:layout_constraintTop_toBottomOf="@id/order_Request" />
+
+    <Spinner
+        android:id="@+id/meetup_Location"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/label_location" />
+
+</android.support.constraint.ConstraintLayout>
