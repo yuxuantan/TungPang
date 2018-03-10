@@ -30,13 +30,26 @@ import java.util.UUID;
 
 public class MyApplication extends Application {
 
+    /** User-set constants **/
+    // Debugging tag
     private static final String TAG = "app";
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    // Firestore collection for Users
     private static final String USERS_COLLECTION = "users";
+    // Whether to show first-run dialog as long as no telegram_username is given
+    private static final boolean TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN = true;
+    // SharedPreferences key to store installation Unique ID
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+
+    /** Runtime-set variables **/
+    // Holds the Estimote Beacon Manager
     public static BeaconManager beaconManager;
-    public static FirebaseFirestore db;
+    // Holds the uniqueID retrieved from SharedPreferences (or created on first-run)
     private static String uniqueID = null;
+    // Holds the User object for the current user
     private static User user;
+    // Holds the Firestore database instance. Used from a static context
+    public static FirebaseFirestore db;
+    // Holds utility FirstRunVariable to take event handler for MainActivity
     public static FirstRunVariable firstRunVariable;
 
     // Extracted from https://medium.com/@ssaurel/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
@@ -140,6 +153,11 @@ public class MyApplication extends Application {
                             if (document != null && document.exists()) {
                                 user = document.toObject(User.class);
                                 Log.d(TAG, "Existing user; Loaded: " + user);
+
+                                // We need the user's Telegram Username in order for the app to fully function
+                                if(TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN && user.getTelegramUsername() == null) {
+                                    firstRunVariable.firstRun();
+                                }
                             } else {
                                 Log.d(TAG, "No User document with ID " + uniqueID + "; Adding to database.");
                                 addUserToDB();

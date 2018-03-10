@@ -19,6 +19,7 @@ public class User {
     @ServerTimestamp
     private Date serverTimestamp;
 
+    // An empty constructor is required for Firestore's document.toObject(User.class) method
     public User() {}
 
     public User(String identifier, String telegramUsername, boolean isAdmin, String name, long createdAt) {
@@ -76,12 +77,28 @@ public class User {
         return serverTimestamp;
     }
 
+    public String getTelegramLink() {
+        return telegramUsername == null ? null : "https://t.me/" + telegramUsername;
+    }
+
     public void setTelegramUsername(String telegramUsername) {
-        this.telegramUsername = telegramUsername;
+        if(telegramUsername != null && !telegramUsername.isEmpty()) {
+            // Strip whitespace
+            telegramUsername = telegramUsername.trim();
+            // Remove @ from first character
+            if(telegramUsername.charAt(0) == '@') {
+                telegramUsername = telegramUsername.substring(1);
+            }
+            this.telegramUsername = telegramUsername;
+        }
+
     }
 
     public void setName(String name) {
-        this.name = name;
+        // Trim whitespace off name
+        if(name != null && !name.isEmpty()) {
+            this.name = name.trim();
+        }
     }
 
     public void setAdmin(boolean admin) {
