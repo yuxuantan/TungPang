@@ -34,7 +34,7 @@ public class MyApplication extends Application {
     // Debugging tag
     private static final String TAG = "app";
     // Firestore collection for Users
-    private static final String USERS_COLLECTION = "users";
+    public static final String USERS_COLLECTION = "users";
     // Whether to show first-run dialog as long as no telegram_username is given
     private static final boolean TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN = true;
     // SharedPreferences key to store installation Unique ID
@@ -46,7 +46,7 @@ public class MyApplication extends Application {
     // Holds the uniqueID retrieved from SharedPreferences (or created on first-run)
     private static String uniqueID = null;
     // Holds the User object for the current user
-    private static User user;
+    public static User user;
     // Holds the Firestore database instance. Used from a static context
     public static FirebaseFirestore db;
     // Holds utility FirstRunVariable to take event handler for MainActivity

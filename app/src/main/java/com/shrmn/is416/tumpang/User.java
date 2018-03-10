@@ -77,7 +77,7 @@ public class User {
         return serverTimestamp;
     }
 
-    public String getTelegramLink() {
+    public String telegramLink() {
         return telegramUsername == null ? null : "https://t.me/" + telegramUsername;
     }
 
