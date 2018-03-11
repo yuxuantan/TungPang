@@ -10,12 +10,23 @@
         android:id="@+id/image_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20sp"
+        android:padding="20sp"
         android:scaleType="fitCenter"
         android:src="@drawable/logo_grey"
         android:tag="logo"
-        app:layout_constraintBottom_toTopOf="@id/newOrderRequestButton"
+        app:layout_constraintBottom_toTopOf="@id/label_welcome"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label_welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18sp"
+        android:layout_marginBottom="12sp"
+        android:gravity="center"
+        android:text=""
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/newOrderRequestButton" />
 
     <Button
         android:id="@+id/newOrderRequestButton"
@@ -36,7 +47,7 @@
         android:layout_margin="20sp"
         android:background="@color/colorButton"
         android:onClick="fulfilOrderOrderRequest"
-        android:text="FULFIL ORDER REQUEST"
+        android:text="FULFILL ORDER REQUEST"
         android:textColor="@color/colorButtonText"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent" />

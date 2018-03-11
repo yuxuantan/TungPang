@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/ic_launcher_background">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="3"
+            android:layout_rowSpan="2"
+            android:layout_rowWeight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/man_only"
+            android:tag="logo" />
+
+        <TextView
+            android:layout_columnWeight="6"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Welcome to Tumpang!"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </GridLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="Thank you for installing our app!\nPlease fill in the following information." />
+
+    <EditText
+        android:id="@+id/input_telegram_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:hint="Telegram Username"
+        android:inputType="textNoSuggestions" />
+
+    <EditText
+        android:id="@+id/input_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:hint="Your Name"
+        android:inputType="textNoSuggestions" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"
+        android:text="This information is only released upon purchase completion, to facilitate the meetup process!" />
+
+</LinearLayout>
