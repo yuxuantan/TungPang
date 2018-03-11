@@ -1,4 +1,4 @@
-package com.example.xuan.tungpangapp;
+package com.shrmn.is416.tumpang;
 
 import android.content.DialogInterface;
 import android.os.Build;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
@@ -19,12 +18,7 @@ import com.estimote.coresdk.recognition.packets.Beacon;
 import com.estimote.coresdk.service.BeaconManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class FulfilOrdersActivity extends AppCompatActivity {
 
@@ -34,8 +28,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     private static List<Order> unassignedOrders;
     private static List<String> unassignedRestaurantNames = new ArrayList<>();
 
-
-//    private static final Map<String, List<String>> PLACES_BY_BEACONS;
+    //    private static final Map<String, List<String>> PLACES_BY_BEACONS;
 
     //    // TODO: replace "<major>:<minor>" strings to match your own beacons.
     static {
@@ -92,12 +85,10 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 //        }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fulfil_orders);
-
 
 
 //************************ LIST VIEW SET
@@ -144,21 +135,22 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         //***************************
 
 //        beaconManager= new BeaconManager(getApplicationContext());
-        MyApplication. beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
+        MyApplication.beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
                 // Update list
-                Log.d("Status","enter: Major - " + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor());
+                Log.d("Status", "enter: Major - " + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor());
                 adapter.clear();
                 refreshList(beacons);
                 adapter.notifyDataSetChanged();
 
             }
+
             @Override
             public void onExitedRegion(BeaconRegion region) {
                 // Update List  + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor()
-                Log.d("Status","Exit: Major - ");
+                Log.d("Status", "Exit: Major - ");
                 adapter.clear();
                 refreshList(new ArrayList<Beacon>());
                 adapter.notifyDataSetChanged();
@@ -181,18 +173,18 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     }
 
 
-    private void refreshList(List<Beacon> beacons){
+    private void refreshList(List<Beacon> beacons) {
 
         //CONNECT TO DB, pull list of unassigned and set here!! unassignedOrders = ??, Filter again
         // Set ArrayLists
-        Log.d("Refreshed", ""+allOrders.size());
+        Log.d("Refreshed", "" + allOrders.size());
         unassignedOrders.clear();
 
-        for(Order o : allOrders){
+        for (Order o : allOrders) {
 //            Log.d("Refreshed", ""+o.getbeaconIDMajor()+", "+beacon.getMajor());
-            for(Beacon beacon : beacons){
+            for (Beacon beacon : beacons) {
 
-                if(beacon.getMajor()==o.getbeaconIDMajor() && beacon.getMinor()==o.getBeaconIDMinor()){
+                if (beacon.getMajor() == o.getbeaconIDMajor() && beacon.getMinor() == o.getBeaconIDMinor()) {
                     unassignedOrders.add(o);
 
                 }
@@ -201,7 +193,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         }
         unassignedRestaurantNames.clear();
 
-        for(Order o: unassignedOrders){
+        for (Order o : unassignedOrders) {
             unassignedRestaurantNames.add(o.getRestaurantName());
         }
         Log.d("Refreshed", unassignedRestaurantNames.toString());

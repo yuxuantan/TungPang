@@ -1,4 +1,4 @@
-package com.example.xuan.tungpangapp;
+package com.shrmn.is416.tumpang;
 
 import org.junit.Test;
 

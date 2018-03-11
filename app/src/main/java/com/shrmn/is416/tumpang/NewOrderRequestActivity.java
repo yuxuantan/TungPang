@@ -1,4 +1,4 @@
-package com.example.xuan.tungpangapp;
+package com.shrmn.is416.tumpang;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 public class NewOrderRequestActivity extends AppCompatActivity {
@@ -18,7 +17,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
         Spinner dynamicSpinner = (Spinner) findViewById(R.id.food_Outlet);
 
-        String[] items = new String[] { "Chai Latte", "Green Tea", "Black Tea" };
+        String[] items = new String[]{"Chai Latte", "Green Tea", "Black Tea"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, items);
@@ -38,6 +37,4 @@ public class NewOrderRequestActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

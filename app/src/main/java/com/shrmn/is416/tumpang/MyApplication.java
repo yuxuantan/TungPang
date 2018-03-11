@@ -1,5 +1,4 @@
-package com.example.xuan.tungpangapp;
-
+package com.shrmn.is416.tumpang;
 
 import android.app.Application;
 import android.app.Notification;
@@ -9,15 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
-import com.estimote.coresdk.common.config.EstimoteSDK;
-import com.estimote.coresdk.observation.region.Region;
-import com.estimote.coresdk.observation.region.RegionUtils;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
-import com.estimote.coresdk.observation.utils.Proximity;
-import com.estimote.coresdk.recognition.packets.Beacon;
 import com.estimote.coresdk.service.BeaconManager;
+import com.estimote.coresdk.recognition.packets.Beacon;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +35,7 @@ public class MyApplication extends Application {
                                 + "and it's a 5 minute walk from security to the gate. "
                                 + "Looks like you've got plenty of time!");
             }
+
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onExitedRegion(BeaconRegion region) {
@@ -65,9 +60,6 @@ public class MyApplication extends Application {
             }
         });
 
-
-
-
     }
 
 
@@ -76,7 +68,7 @@ public class MyApplication extends Application {
         Intent notifyIntent = new Intent(this, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0,
-                new Intent[] { notifyIntent }, PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent[]{notifyIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle(title)

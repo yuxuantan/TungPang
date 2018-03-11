@@ -1,8 +1,4 @@
-package com.example.xuan.tungpangapp;
-
-/**
- * Created by Xuan on 28/2/18.
- */
+package com.shrmn.is416.tumpang;
 
 public class Order {
     private long orderID;
@@ -56,6 +52,7 @@ public class Order {
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
     }
+
     public long getOrderID() {
         return orderID;
     }
@@ -163,4 +160,5 @@ public class Order {
                 '}';
     }
 }
+
 

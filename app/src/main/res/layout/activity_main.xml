@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.xuan.tungpangapp.MainActivity">
+    tools:context="com.shrmn.is416.tumpang.MainActivity">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/image_logo"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo_grey"
+        android:tag="logo"
+        app:layout_constraintBottom_toTopOf="@id/newOrderRequestButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:layout_marginTop="420dp"
-            android:id="@+id/newOrderRequestButton"
-            android:layout_width="380dp"
-            android:layout_height="50dp"
-            android:text="NEW ORDER REQUEST"
-            android:textSize="20dp"
-            android:textColor="#FFFFFF"
-            android:background="#0abab5"
-            android:layout_gravity="center"
-            android:onClick="newOrderRequest"
-        />
+    <Button
+        android:id="@+id/newOrderRequestButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:background="@color/colorButton"
+        android:onClick="newOrderRequest"
+        android:text="NEW ORDER REQUEST"
+        android:textColor="@color/colorButtonText"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@id/fulfilOrderRequestButton" />
 
-        <Button
-            android:layout_marginTop="20dp"
-            android:id="@+id/fulfilOrderRequestButton"
-            android:layout_width="380dp"
-            android:layout_height="50dp"
-            android:text="FULFIL ORDER REQUEST"
-            android:textSize="20dp"
-            android:textColor="#FFFFFF"
-            android:background="#0abab5"
-            android:layout_gravity="center"
-            android:onClick="fulfilOrderOrderRequest"
-            />
-    </LinearLayout>
+    <Button
+        android:id="@+id/fulfilOrderRequestButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:background="@color/colorButton"
+        android:onClick="fulfilOrderOrderRequest"
+        android:text="FULFIL ORDER REQUEST"
+        android:textColor="@color/colorButtonText"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

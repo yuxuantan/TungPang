@@ -1,4 +1,4 @@
-package com.example.xuan.tungpangapp;
+package com.shrmn.is416.tumpang;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +13,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void newOrderRequest(View view){
-        Intent ptg = new Intent( this, NewOrderRequestActivity.class);
+    public void newOrderRequest(View view) {
+        Intent ptg = new Intent(this, NewOrderRequestActivity.class);
         startActivity(ptg);
     }
 
-    public void fulfilOrderOrderRequest(View view){
+    public void fulfilOrderOrderRequest(View view) {
         Intent ptg = new Intent(this, FulfilOrdersActivity.class);
         startActivity(ptg);
     }

@@ -1,4 +1,4 @@
-package com.example.xuan.tungpangapp;
+package com.shrmn.is416.tumpang;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.xuan.tungpangapp", appContext.getPackageName());
+        assertEquals("com.shrmn.is416.tumpang", appContext.getPackageName());
     }
 }
