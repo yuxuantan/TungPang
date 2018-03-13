@@ -93,6 +93,9 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                // Pause refresh
+                beaconManager.stopRanging(region);
+
                 String selectedOrderTitle = parent.getItemAtPosition(position).toString();
                 Order selectedOrder = unassignedOrders.get(position);
 
@@ -103,6 +106,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                // Start Ranging after dismiss
+                                beaconManager.startRanging(region);
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Accept Job",
@@ -114,16 +119,19 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                 unassignedOrders.remove(position);
                                 adapter.notifyDataSetChanged();
                                 // Remove from actual DB using API - after API is set up
+
+                                //Start ranging after done
+                                beaconManager.startRanging(region);
                             }
                         });
                 alertDialog.show();
+                alertDialog.setCanceledOnTouchOutside(false);
+
+
             }
         });
         //***************************
 
-        beaconManager= new BeaconManager(getApplicationContext());
-        region = new BeaconRegion("ranged region",
-                UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
 
 //        beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
 //            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -147,6 +155,11 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 //
 //            }
 //        });
+
+
+        beaconManager= new BeaconManager(getApplicationContext());
+        region = new BeaconRegion("ranged region",
+                UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
 
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
@@ -205,13 +218,13 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        beaconManager.stopRanging(region);
+        beaconManager.disconnect();
 
         super.onPause();
     }
 
     public void finishActivity(View view) {
-        beaconManager.stopRanging(region);
+        beaconManager.disconnect();
         finish();
     }
 
@@ -229,4 +242,5 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         }.start();
 
     }
+
 }
