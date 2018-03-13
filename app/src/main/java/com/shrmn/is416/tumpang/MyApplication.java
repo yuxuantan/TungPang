@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.estimote.coresdk.common.config.EstimoteSDK;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.service.BeaconManager;
 import com.estimote.coresdk.recognition.packets.Beacon;
@@ -102,38 +103,34 @@ public class MyApplication extends Application {
     }
 
     private void initialiseBeaconSubsystem() {
+
         beaconManager = new BeaconManager(getApplicationContext());
+
+        // !!!! As long as there is any beacon currently in range, will not detect exit/entry event
         beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
                 showNotification(
                         "ENTERED!",
-                        "Current security wait time is 15 minutes, "
-                                + "and it's a 5 minute walk from security to the gate. "
-                                + "Looks like you've got plenty of time!");
-            }
+                        "Just entered the range of a beacon");
+                Log.d("Beacons", beacons.toString());
 
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            }
             @Override
             public void onExitedRegion(BeaconRegion region) {
-                // could add an "exit" notification too if you want (-:
                 showNotification(
                         "Exited!",
-                        "Current security wait time is 15 minutes, "
-                                + "and it's a 5 minute walk from security to the gate. "
-                                + "Looks like you've got plenty of time!");
+                        "Just exited the range of a beacon");
             }
 
         });
+        beaconManager.setBackgroundScanPeriod(6000, 0);
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
                 beaconManager.startMonitoring(new BeaconRegion(
                         "monitored region",
                         UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null));
-//
-//                                6722, 37991));
 
             }
         });
