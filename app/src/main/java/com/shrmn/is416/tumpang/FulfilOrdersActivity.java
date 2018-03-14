@@ -2,6 +2,7 @@ package com.shrmn.is416.tumpang;
 
 import android.content.DialogInterface;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import com.estimote.coresdk.service.BeaconManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class FulfilOrdersActivity extends AppCompatActivity {
 
@@ -28,24 +30,11 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     private static List<Order> unassignedOrders;
     private static List<String> unassignedRestaurantNames = new ArrayList<>();
 
-    //    private static final Map<String, List<String>> PLACES_BY_BEACONS;
+    public BeaconManager beaconManager;
+    public BeaconRegion region;
 
-    //    // TODO: replace "<major>:<minor>" strings to match your own beacons.
     static {
-//
-//        // At the start populate from restaurant DB - get all restaurant name, restaurant ID and beaconID
-//
-//        Map<String, List<String>> placesByBeacons = new HashMap<>();
-//        placesByBeacons.put("6722:37991", new ArrayList<String>() {{
-//            add("Koufu");
-//            add("101");
-//        }});
-//        placesByBeacons.put("648:12", new ArrayList<String>() {{
-//            add("Waterloo");
-//            add("102");
-//        }});
-//        PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
-        // Get Orders
+
         // HARD CODED PORTION
         // ** Add only orders that have status==0 ie. "unassigned" into the lists
         allOrders = new ArrayList<>();
@@ -72,17 +61,15 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 20,
                 13,
                 24,
-                648,
-                123,
+                16466,
+                55391,
                 "SIS GSR 2-3",
                 0,
                 "Waterloo"));
 
         unassignedOrders = new ArrayList<>();
         unassignedRestaurantNames = new ArrayList<>();
-//        for(Order o: unassignedOrders){
-//            unassignedRestaurantNames.add(o.getRestaurantName());
-//        }
+
     }
 
     @Override
@@ -106,6 +93,9 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                // Pause refresh
+                beaconManager.stopRanging(region);
+
                 String selectedOrderTitle = parent.getItemAtPosition(position).toString();
                 Order selectedOrder = unassignedOrders.get(position);
 
@@ -116,6 +106,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                // Start Ranging after dismiss
+                                beaconManager.startRanging(region);
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Accept Job",
@@ -127,48 +119,64 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                 unassignedOrders.remove(position);
                                 adapter.notifyDataSetChanged();
                                 // Remove from actual DB using API - after API is set up
+
+                                //Start ranging after done
+                                beaconManager.startRanging(region);
                             }
                         });
                 alertDialog.show();
+                alertDialog.setCanceledOnTouchOutside(false);
+
+
             }
         });
         //***************************
 
-//        beaconManager= new BeaconManager(getApplicationContext());
-        MyApplication.beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
-                // Update list
-                Log.d("Status", "enter: Major - " + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor());
-                adapter.clear();
-                refreshList(beacons);
-                adapter.notifyDataSetChanged();
 
-            }
-
-            @Override
-            public void onExitedRegion(BeaconRegion region) {
-                // Update List  + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor()
-                Log.d("Status", "Exit: Major - ");
-                adapter.clear();
-                refreshList(new ArrayList<Beacon>());
-                adapter.notifyDataSetChanged();
-
-            }
-        });
-
-//        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+//        beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 //            @Override
-//            public void onServiceReady() {
-//                beaconManager.startMonitoring(new BeaconRegion(
-//                        "monitored region",
-//                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null));
+//            public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
+//                // Update list
+//                Log.d("Status", "enter: " + beacons.toString());
+//                adapter.clear();
+//                refreshList(beacons);
+//                adapter.notifyDataSetChanged();
 //
-////                                6722, 37991));
+//            }
+//
+//            @Override
+//            public void onExitedRegion(BeaconRegion region) {
+//                // Update List  + beacons.get(0).getMajor() + " Minor - " + beacons.get(0).getMinor()
+//                Log.d("Status", "Exit");
+//                adapter.clear();
+//                refreshList(new ArrayList<Beacon>());
+//                adapter.notifyDataSetChanged();
 //
 //            }
 //        });
+
+
+        beaconManager= new BeaconManager(getApplicationContext());
+        region = new BeaconRegion("ranged region",
+                UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
+
+        beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
+            @Override
+            public void onBeaconsDiscovered(BeaconRegion region, List<Beacon> list) {
+                if (!list.isEmpty()) {
+                    Beacon nearestBeacon = list.get(0);
+                    // TODO: update the UI here
+                    Log.d("Nearest beacon", "Nearest places: " + nearestBeacon.toString());
+                    Log.d("All beacons", list.toString());
+                    // update list
+                    // Once detected, stop ranging, until 10 seconds later - adaptive duty cycling - only triggered when enter/exit events
+                }
+                refreshList(list);
+                startDutyCyclingCd();
+                adapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -176,19 +184,13 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     private void refreshList(List<Beacon> beacons) {
 
         //CONNECT TO DB, pull list of unassigned and set here!! unassignedOrders = ??, Filter again
-        // Set ArrayLists
         Log.d("Refreshed", "" + allOrders.size());
         unassignedOrders.clear();
-
         for (Order o : allOrders) {
-//            Log.d("Refreshed", ""+o.getbeaconIDMajor()+", "+beacon.getMajor());
             for (Beacon beacon : beacons) {
-
                 if (beacon.getMajor() == o.getbeaconIDMajor() && beacon.getMinor() == o.getBeaconIDMinor()) {
                     unassignedOrders.add(o);
-
                 }
-
             }
         }
         unassignedRestaurantNames.clear();
@@ -198,7 +200,6 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         }
         Log.d("Refreshed", unassignedRestaurantNames.toString());
 
-
     }
 
     @Override
@@ -206,5 +207,40 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         super.onResume();
 
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
+
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                beaconManager.startRanging(region);
+            }
+        });
     }
+
+    @Override
+    protected void onPause() {
+        beaconManager.disconnect();
+
+        super.onPause();
+    }
+
+    public void finishActivity(View view) {
+        beaconManager.disconnect();
+        finish();
+    }
+
+    public void startDutyCyclingCd(){
+        beaconManager.stopRanging(region);
+        new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                beaconManager.startRanging(region);
+            }
+        }.start();
+
+    }
+
 }
