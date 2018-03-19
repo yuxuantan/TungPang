@@ -55,6 +55,8 @@ public class MyApplication extends Application {
     public static FirstRunVariable firstRunVariable;
     // Holds retrieved locations
     public static HashMap<String, Location> locations;
+    // Holds the currently being-built order item
+    public static Order pendingOrder;
 
     // Extracted from https://medium.com/@ssaurel/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
     public synchronized static String id(Context context) {

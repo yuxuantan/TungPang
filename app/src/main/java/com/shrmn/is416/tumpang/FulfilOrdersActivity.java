@@ -37,35 +37,35 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
         // HARD CODED PORTION
         // ** Add only orders that have status==0 ie. "unassigned" into the lists
-        allOrders = new ArrayList<>();
-
-        allOrders.add(new Order(1,
-                101,
-                "Chicken Rice",
-                3.0,
-                0.3,
-                20,
-                13,
-                24,
-                6722,
-                37991,
-                "SIS GSR 2-3",
-                0,
-                "Koufu"));
-
-        allOrders.add(new Order(1,
-                102,
-                "Hokkien Mee",
-                3.0,
-                0.3,
-                20,
-                13,
-                24,
-                16466,
-                55391,
-                "SIS GSR 2-3",
-                0,
-                "Waterloo"));
+//        allOrders = new ArrayList<>();
+//
+//        allOrders.add(new Order(1,
+//                101,
+//                "Chicken Rice",
+//                3.0,
+//                0.3,
+//                20,
+//                13,
+//                24,
+//                6722,
+//                37991,
+//                "SIS GSR 2-3",
+//                0,
+//                "Koufu"));
+//
+//        allOrders.add(new Order(1,
+//                102,
+//                "Hokkien Mee",
+//                3.0,
+//                0.3,
+//                20,
+//                13,
+//                24,
+//                16466,
+//                55391,
+//                "SIS GSR 2-3",
+//                0,
+//                "Waterloo"));
 
         unassignedOrders = new ArrayList<>();
         unassignedRestaurantNames = new ArrayList<>();
@@ -188,15 +188,15 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         unassignedOrders.clear();
         for (Order o : allOrders) {
             for (Beacon beacon : beacons) {
-                if (beacon.getMajor() == o.getbeaconIDMajor() && beacon.getMinor() == o.getBeaconIDMinor()) {
-                    unassignedOrders.add(o);
-                }
+//                if (beacon.getMajor() == o.getbeaconIDMajor() && beacon.getMinor() == o.getBeaconIDMinor()) {
+//                    unassignedOrders.add(o);
+//                }
             }
         }
         unassignedRestaurantNames.clear();
 
         for (Order o : unassignedOrders) {
-            unassignedRestaurantNames.add(o.getRestaurantName());
+//            unassignedRestaurantNames.add(o.getRestaurantName());
         }
         Log.d("Refreshed", unassignedRestaurantNames.toString());
 
