@@ -23,6 +23,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
     private static final String TAG = "OrderRequest";
     private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
+    private ArrayList<String> locationIDs;
+    private ArrayList<String> locationNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
         dynamicSpinner = findViewById(R.id.food_Outlet);
 
+        locationNames = new ArrayList<>();
+        locationIDs = new ArrayList<>();
         retrieveLocations();
     }
 
@@ -71,6 +75,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                                 new Menu(drinks, food)
                                         )
                                 );
+                                locationIDs.add(locationID);
+                                locationNames.add(data.get("name").toString());
                             }
                             Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
                             setAdapterContents();
@@ -83,10 +89,9 @@ public class NewOrderRequestActivity extends AppCompatActivity {
     }
 
     private void setAdapterContents() {
-        String[] items = new String[]{"Chai Latte", "Green Tea", "Black Tea"};
 
         adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, items);
+                android.R.layout.simple_spinner_item, locationNames);
 
         dynamicSpinner.setAdapter(adapter);
 
@@ -94,7 +99,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                Log.v("item", (String) parent.getItemAtPosition(position));
+                Log.v(TAG, (String) parent.getItemAtPosition(position));
+                Log.d(TAG, "onItemSelected: " + locationIDs.get(position));
             }
 
             @Override
