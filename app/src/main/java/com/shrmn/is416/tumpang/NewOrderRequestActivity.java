@@ -31,26 +31,6 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
         dynamicSpinner = findViewById(R.id.food_Outlet);
 
-        String[] items = new String[]{"Chai Latte", "Green Tea", "Black Tea"};
-
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, items);
-
-        dynamicSpinner.setAdapter(adapter);
-
-        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                Log.v("item", (String) parent.getItemAtPosition(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
-            }
-        });
-
         retrieveLocations();
     }
 
@@ -93,11 +73,34 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                 );
                             }
                             Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
+                            setAdapterContents();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 }
         );
+    }
+
+    private void setAdapterContents() {
+        String[] items = new String[]{"Chai Latte", "Green Tea", "Black Tea"};
+
+        adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, items);
+
+        dynamicSpinner.setAdapter(adapter);
+
+        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Log.v("item", (String) parent.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
     }
 }
