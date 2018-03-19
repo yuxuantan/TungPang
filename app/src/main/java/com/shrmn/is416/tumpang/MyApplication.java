@@ -54,6 +54,8 @@ public class MyApplication extends Application {
     public static FirstRunVariable firstRunVariable;
     // Holds retrieved locations
     public static HashMap<String, Location> locations;
+    // Holds the currently being-built order item
+    public static Order pendingOrder;
 
 //    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
