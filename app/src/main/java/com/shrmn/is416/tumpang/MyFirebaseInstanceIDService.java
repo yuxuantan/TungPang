@@ -7,7 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
-    private static final String TAG = "firebase";
+    private static final String TAG = "FBInstanceIDService";
 
     @Override
     public void onTokenRefresh() {
@@ -21,6 +21,9 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     }
 
     private void sendRegistrationToServer(String refreshedToken) {
+        // Update User instance with the new firebase instance ID
+        MyApplication.user.setFirebaseInstanceID(refreshedToken);
+        MyApplication.user.save();
     }
 
 }

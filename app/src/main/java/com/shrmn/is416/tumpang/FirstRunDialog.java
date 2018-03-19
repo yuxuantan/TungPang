@@ -41,7 +41,7 @@ public class FirstRunDialog extends DialogFragment {
                         user.setTelegramUsername(inputTelegramUsername.getText().toString());
 
                         Log.d(TAG, "Confirmed first run dialog. Confirmed credentials: telegram_username=" + user.getTelegramUsername() + "; name=" + user.getName());
-                        updateUser();
+                        user.save();
 //                        mListener.onDialogPositiveClick(FirstRunDialog.this);
                     }
                 })
@@ -52,23 +52,6 @@ public class FirstRunDialog extends DialogFragment {
                     }
                 });
         return builder.create();
-    }
-
-    private void updateUser() {
-        MyApplication.db.collection(MyApplication.USERS_COLLECTION).document(user.getIdentifier())
-                .set(user, SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "User updated.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating user", e);
-                    }
-                });
     }
 
     /* The activity that creates an instance of this dialog fragment must

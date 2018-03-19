@@ -1,13 +1,19 @@
 package com.shrmn.is416.tumpang;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.Date;
 
 public class User {
 
+    private static final String TAG = "User";
     private String identifier;
     private String telegramUsername;
     private boolean isAdmin;
@@ -15,6 +21,7 @@ public class User {
     private long createdAt;
     private String deviceModel;
     private String deviceManufacturer;
+    private String firebaseInstanceID;
 
     @ServerTimestamp
     private Date serverTimestamp;
@@ -22,19 +29,20 @@ public class User {
     // An empty constructor is required for Firestore's document.toObject(User.class) method
     public User() {}
 
-    public User(String identifier, String telegramUsername, boolean isAdmin, String name, long createdAt) {
+    public User(String identifier, String telegramUsername, boolean isAdmin, String name, long createdAt, String firebaseInstanceID) {
         this.identifier = identifier;
         this.telegramUsername = telegramUsername;
         this.isAdmin = isAdmin;
         this.name = name;
         this.createdAt = createdAt;
+        this.firebaseInstanceID = firebaseInstanceID;
 
         deviceModel = Build.MODEL;
         deviceManufacturer = Build.MANUFACTURER;
     }
 
     public User(String identifier, String telegramUsername, boolean isAdmin, String name) {
-        this(identifier, telegramUsername, isAdmin, name, System.currentTimeMillis());
+        this(identifier, telegramUsername, isAdmin, name, System.currentTimeMillis(), null);
     }
 
     public User(String identifier) {
@@ -114,6 +122,8 @@ public class User {
         isAdmin = admin;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,5 +151,30 @@ public class User {
                 ", deviceManufacturer='" + deviceManufacturer + '\'' +
                 ", serverTimestamp=" + serverTimestamp +
                 '}';
+    }
+
+    public String getFirebaseInstanceID() {
+        return firebaseInstanceID;
+    }
+
+    public void setFirebaseInstanceID(String firebaseInstanceID) {
+        this.firebaseInstanceID = firebaseInstanceID;
+    }
+
+    public void save() {
+        MyApplication.db.collection(MyApplication.USERS_COLLECTION).document(identifier)
+                .set(this, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "User updated.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating user", e);
+                    }
+                });
     }
 }

@@ -22,8 +22,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +52,8 @@ public class MyApplication extends Application {
     public static FirebaseFirestore db;
     // Holds utility FirstRunVariable to take event handler for MainActivity
     public static FirstRunVariable firstRunVariable;
+    // Holds retrieved locations
+    public static HashMap<String, Location> locations;
 
 //    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
@@ -77,6 +81,7 @@ public class MyApplication extends Application {
         Log.d(TAG, "User Unique ID: " + uniqueID);
 
         firstRunVariable = new FirstRunVariable();
+        locations = new HashMap<>();
 
         // Abstracted these parts into subroutines
         initialiseBeaconSubsystem();
@@ -154,6 +159,14 @@ public class MyApplication extends Application {
                             if (document != null && document.exists()) {
                                 user = document.toObject(User.class);
                                 Log.d(TAG, "Existing user; Loaded: " + user);
+
+                                // Force a token retrieval if there is no token currently associated with this user
+                                if(user.getFirebaseInstanceID() == null) {
+                                    String token = FirebaseInstanceId.getInstance().getToken();
+                                    user.setFirebaseInstanceID(token);
+                                    Log.d(TAG, "onComplete: Token Retrieved = " + token);
+                                    user.save();
+                                }
                             } else {
                                 Log.d(TAG, "No User document with ID " + uniqueID + "; Adding to database.");
                                 addUserToDB();
