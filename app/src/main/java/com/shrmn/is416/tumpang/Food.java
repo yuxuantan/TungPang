@@ -28,4 +28,12 @@ class Food {
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
+
+    @Override
+    public String toString() {
+        return "Food{" +
+                "name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                '}';
+    }
 }

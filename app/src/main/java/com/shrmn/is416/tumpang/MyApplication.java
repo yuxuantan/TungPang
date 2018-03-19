@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,6 +53,8 @@ public class MyApplication extends Application {
     public static FirebaseFirestore db;
     // Holds utility FirstRunVariable to take event handler for MainActivity
     public static FirstRunVariable firstRunVariable;
+    // Holds retrieved locations
+    public static HashMap<String, Location> locations;
 
     // Extracted from https://medium.com/@ssaurel/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
     public synchronized static String id(Context context) {
@@ -77,6 +80,7 @@ public class MyApplication extends Application {
         Log.d(TAG, "User Unique ID: " + uniqueID);
 
         firstRunVariable = new FirstRunVariable();
+        locations = new HashMap<>();
 
         // Abstracted these parts into subroutines
         initialiseBeaconSubsystem();

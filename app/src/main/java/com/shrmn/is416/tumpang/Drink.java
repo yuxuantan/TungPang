@@ -28,6 +28,14 @@ class Drink {
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
+
+    @Override
+    public String toString() {
+        return "Drink{" +
+                "name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                '}';
+    }
 }
 
 

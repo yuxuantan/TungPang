@@ -35,4 +35,12 @@ public class Menu {
     public void setFood(ArrayList<Food> food) {
         this.food = food;
     }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "drinks=" + drinks +
+                ", food=" + food +
+                '}';
+    }
 }
