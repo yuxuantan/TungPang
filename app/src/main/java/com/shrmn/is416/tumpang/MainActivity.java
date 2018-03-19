@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
 
 import static com.shrmn.is416.tumpang.MyApplication.user;
@@ -40,9 +39,7 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseMessaging.getInstance().subscribeToTopic("test");
-
-
+//
         labelWelcome = findViewById(R.id.label_welcome);
 
         MyApplication.firstRunVariable.setVariableChangeListener(new VariableChangeListener() {
@@ -75,4 +72,6 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
         Intent ptg = new Intent(this, FulfilOrdersActivity.class);
         startActivity(ptg);
     }
+
+
 }
