@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -195,6 +196,8 @@ public class MyApplication extends Application {
                     }
                 });
     }
+
+
 
 
 }

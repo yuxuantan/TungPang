@@ -1,5 +1,6 @@
 package com.shrmn.is416.tumpang;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -17,9 +18,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shrmn.is416.tumpang.utilities.FCMRestClient;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class NewOrderRequestMenuActivity extends AppCompatActivity implements OrderConfirmationDialog.OrderConfirmationDialogListener {
 
@@ -115,4 +125,6 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
         });
         Snackbar.make(findViewById(R.id.menu_list), "Order Confirmed!", Snackbar.LENGTH_SHORT).show();
     }
+
+
 }

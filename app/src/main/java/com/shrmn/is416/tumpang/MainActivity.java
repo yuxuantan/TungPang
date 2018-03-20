@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -19,10 +20,17 @@ import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 import static com.shrmn.is416.tumpang.MyApplication.user;
 
@@ -91,32 +99,11 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
     }
 
     public void fulfilOrderOrderRequest(View view) {
-        sendNotif("1bc4bdb4-3574-4b5b-82e1-2d6d0997fadb");
         Intent ptg = new Intent(this, FulfilOrdersActivity.class);
         startActivity(ptg);
     }
 
-    public void sendNotif(String targetIdentifier){
-        // Test HTTP Request
-        JsonObject innerObj = new JsonObject();
-        innerObj.addProperty("message", "This is a Firebase Cloud Messaging Topic Message!");
 
-        RequestParams params = new RequestParams();
-        params.put("to", "/topics/"+ targetIdentifier);
-        params.put("data", innerObj);
-        FCMRestClient client = new FCMRestClient();
-        client.post("", params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.e("status", "Success: " + responseBody.toString());
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("status", "Failure:" +error);
-            }
-        });
-    }
 
 
 }
