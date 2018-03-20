@@ -2,6 +2,7 @@ package com.shrmn.is416.tumpang;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +100,19 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
+        Task task = MyApplication.db.collection("orders").add(MyApplication.pendingOrder.composeOrder()).addOnSuccessListener(new OnSuccessListener <DocumentReference>()
+        {
+            @Override
+            public void onSuccess (DocumentReference documentReference){
+                Log.d(TAG, "DocumentSnapshot successfully written! ID: " + documentReference.getId());
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error writing document", e);
+            }
+        });
         Snackbar.make(findViewById(R.id.menu_list), "Order Confirmed!", Snackbar.LENGTH_SHORT).show();
     }
 }

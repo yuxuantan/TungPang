@@ -1,9 +1,13 @@
 package com.shrmn.is416.tumpang;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
+    private static final String TAG = "OrderClass";
     private String orderID;
     private String locationID;
     private String locationName;
@@ -41,6 +45,7 @@ public class Order {
         this.tipAmount = tipAmount;
         this.deliveryLocation = deliveryLocation;
         this.menuItems = new HashMap<>();
+        this.customerUserID = MyApplication.uniqueID;
     }
 
     public Location getLocation() {
@@ -150,6 +155,26 @@ public class Order {
                 ", menuItems=" + menuItems +
                 ", deliveryLocation='" + deliveryLocation + '\'' +
                 '}';
+    }
+
+    public Map<String, Object> composeOrder() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("customerUserID", customerUserID);
+        map.put("deliveryLocation", deliveryLocation);
+        map.put("locationID", "/locations/" + locationID);
+        ArrayList<HashMap<String, Object>> items = new ArrayList<>();
+        for(MenuItem item : menuItems.keySet()) {
+            HashMap<String, Object> obj = new HashMap<>();
+            obj.put("item", item.getPath());
+            obj.put("qty", menuItems.get(item));
+            items.add(obj);
+//            Log.d(TAG, "composeOrder: Adding item " + menuItems.get(item) + " of " + item.getPath());
+        }
+        map.put("menuItems", items);
+        map.put("status", 0);
+        map.put("tipAmount", tipAmount);
+
+        return map;
     }
 }
 
