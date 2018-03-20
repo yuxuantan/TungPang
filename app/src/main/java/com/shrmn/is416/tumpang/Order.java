@@ -40,6 +40,7 @@ public class Order {
         this.locationName = locationName;
         this.tipAmount = tipAmount;
         this.deliveryLocation = deliveryLocation;
+        this.menuItems = new HashMap<>();
     }
 
     public Location getLocation() {
