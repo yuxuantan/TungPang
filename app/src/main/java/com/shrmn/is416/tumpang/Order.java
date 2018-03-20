@@ -139,6 +139,18 @@ public class Order {
         menuItems.remove(menuItem);
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderID='" + orderID + '\'' +
+                ", locationID='" + locationID + '\'' +
+                ", locationName='" + locationName + '\'' +
+                ", tipAmount=" + tipAmount +
+                ", customerUserID='" + customerUserID + '\'' +
+                ", menuItems=" + menuItems +
+                ", deliveryLocation='" + deliveryLocation + '\'' +
+                '}';
+    }
 }
 
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
     tools:context="com.shrmn.is416.tumpang.NewOrderRequestMenuActivity">
 
     <ListView
@@ -24,7 +25,17 @@
         android:layout_marginTop="20dp"
         android:onClick="addItemButton"
         android:text="Add Item"
+        app:layout_constraintTop_toBottomOf="@id/menu_list"
+        app:layout_constraintBottom_toTopOf="@id/confirmation_button"/>
+    <Button
+        android:id="@+id/confirmation_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp"
+        android:onClick="confirmButton"
+        android:text="Confirm Order"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menu_list" />
+        app:layout_constraintTop_toBottomOf="@id/add_item_button" />
 
 </android.support.constraint.ConstraintLayout>

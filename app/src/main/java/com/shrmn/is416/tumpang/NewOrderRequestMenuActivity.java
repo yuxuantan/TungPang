@@ -1,7 +1,9 @@
 package com.shrmn.is416.tumpang;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +15,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NewOrderRequestMenuActivity extends AppCompatActivity {
+public class NewOrderRequestMenuActivity extends AppCompatActivity implements OrderConfirmationDialog.OrderConfirmationDialogListener {
 
     private static final String TAG = "OrderRequestMenu";
     private final int REQ_CODE_ADD_ITEM = 1;
@@ -77,5 +79,21 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity {
     public void addItemButton(View view) {
         startActivityForResult(addItemIntent, REQ_CODE_ADD_ITEM);
         Log.d(TAG, "addItemButton: Called");
+    }
+
+    public void confirmButton(View view) {
+        DialogFragment dialog = new OrderConfirmationDialog();
+        dialog.show(getSupportFragmentManager(), "OrderConfirmationDialog");
+    }
+
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        Snackbar.make(findViewById(R.id.menu_list), "Confirmation Cancelled!", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Snackbar.make(findViewById(R.id.menu_list), "Order Confirmed!", Snackbar.LENGTH_SHORT).show();
     }
 }
