@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.estimote.coresdk.common.config.EstimoteSDK;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.service.BeaconManager;
 import com.estimote.coresdk.recognition.packets.Beacon;
@@ -25,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +58,8 @@ public class MyApplication extends Application {
     // Holds the currently being-built order item
     public static Order pendingOrder;
 
+//    private BroadcastReceiver mRegistrationBroadcastReceiver;
+
     // Extracted from https://medium.com/@ssaurel/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
     public synchronized static String id(Context context) {
         if (uniqueID == null) {
@@ -88,6 +90,9 @@ public class MyApplication extends Application {
         initialiseBeaconSubsystem();
         // Also loads the current User's record into this.User
         initialiseFirebaseDatabase();
+
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -97,11 +102,12 @@ public class MyApplication extends Application {
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0,
                 new Intent[]{notifyIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.man_only)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .build();
         notification.defaults |= Notification.DEFAULT_SOUND;
         NotificationManager notificationManager =
@@ -190,5 +196,8 @@ public class MyApplication extends Application {
                     }
                 });
     }
+
+
+
 
 }

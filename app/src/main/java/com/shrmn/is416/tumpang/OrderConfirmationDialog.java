@@ -2,6 +2,7 @@ package com.shrmn.is416.tumpang;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shrmn.is416.tumpang.utilities.FCMRestClient;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
+
+import static com.shrmn.is416.tumpang.MyApplication.user;
 
 public class OrderConfirmationDialog extends DialogFragment {
     private static final String TAG = "OrderConfirmDlg";
@@ -36,6 +50,7 @@ public class OrderConfirmationDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d(TAG, "onClick: Confirmed!");
                         mListener.onDialogPositiveClick(OrderConfirmationDialog.this);
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -77,4 +92,6 @@ public class OrderConfirmationDialog extends DialogFragment {
             }
         }
     }
+
+
 }

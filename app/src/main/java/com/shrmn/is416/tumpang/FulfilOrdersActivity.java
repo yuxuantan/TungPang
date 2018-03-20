@@ -3,6 +3,7 @@ package com.shrmn.is416.tumpang;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +18,24 @@ import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.recognition.packets.Beacon;
 import com.estimote.coresdk.service.BeaconManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shrmn.is416.tumpang.utilities.FCMRestClient;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class FulfilOrdersActivity extends AppCompatActivity {
 
@@ -32,6 +47,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     public BeaconManager beaconManager;
     public BeaconRegion region;
+
+    private static final String TAG = "FulfilOrderRequest";
 
     static {
 
@@ -118,6 +135,11 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                 unassignedRestaurantNames.remove(position);
                                 unassignedOrders.remove(position);
                                 adapter.notifyDataSetChanged();
+
+                                // Send notification to customer with Certain UserID - temp send to self
+                                if(MyApplication.user!=null && MyApplication.user.getIdentifier()!=null){
+                                    sendNotif(MyApplication.user.getIdentifier());
+                                }
                                 // Remove from actual DB using API - after API is set up
 
                                 //Start ranging after done
@@ -178,6 +200,37 @@ public class FulfilOrdersActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void sendNotif(String identifier) {
+        // Test HTTP Request
+        JsonObject finalObj = new JsonObject();
+        finalObj.addProperty("to", "/topics/"+ identifier);
+
+        JsonObject msgObj = new JsonObject();
+        msgObj.addProperty("message", "This is a Firebase Cloud Messaging Topic Message!");
+        finalObj.add("data", msgObj);
+
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(finalObj.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        FCMRestClient client = new FCMRestClient();
+        client.post(FulfilOrdersActivity.this,"", entity, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.e("status", "Success:");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.e("status", "Failure:" +error);
+            }
+        });
     }
 
 
@@ -242,5 +295,10 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         }.start();
 
     }
+
+
+
+
+
 
 }
