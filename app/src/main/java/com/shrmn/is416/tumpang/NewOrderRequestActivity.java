@@ -62,6 +62,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                 Map<String, Object> data = document.getData();
                                 ArrayList<Drink> drinks = new ArrayList<>();
                                 ArrayList<Food> food = new ArrayList<>();
+                                ArrayList<MenuItem> items = new ArrayList<>();
 
                                 Log.d(TAG, document.getId() + " => " + data);
 
@@ -69,16 +70,20 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                 ArrayList<Map<String, Object>> foodObj = (ArrayList<Map<String, Object>>) menuObj.get("food");
                                 ArrayList<Map<String, Object>> drinksObj = (ArrayList<Map<String, Object>>) menuObj.get("drinks");
 
+                                String path = document.getReference().getPath();
 
-                                for(int i = 0; i < foodObj.size(); i++) {
+                                for (int i = 0; i < foodObj.size(); i++) {
                                     Map<String, Object> foodItem = foodObj.get(i);
-                                    food.add(new Food(document.getDocumentReference("menu/food[" + i + "]").getPath(), foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
+                                    food.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
+                                    items.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
                                 }
 
-                                for(int i = 0; i < drinksObj.size(); i++) {
+                                for (int i = 0; i < drinksObj.size(); i++) {
                                     Map<String, Object> drinkItem = drinksObj.get(i);
-                                    drinks.add(new Drink(document.getDocumentReference("menu/drinks[" + i + "]").getPath(), drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
+                                    drinks.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
+                                    items.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
                                 }
+
 
                                 MyApplication.locations.put(locationID,
                                         new Location(
@@ -87,7 +92,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                                 data.get("address").toString(),
                                                 123,
                                                 456,
-                                                new Menu(drinks, food)
+                                                new Menu(items)
                                         )
                                 );
                                 locationIDs.add(locationID);
@@ -155,14 +160,14 @@ public class NewOrderRequestActivity extends AppCompatActivity {
     public void next(View view) {
         EditText editView = findViewById(R.id.meetup_location);
 
-        if(MyApplication.pendingOrder == null) {
+        if (MyApplication.pendingOrder == null) {
             MyApplication.pendingOrder = new Order(
                     MyApplication.locations.get(values.get("locationID")),
                     values.get("locationID"),
                     values.get("locationName"),
                     Double.parseDouble(values.get("tipAmount")),
                     editView.getText().toString()
-                    );
+            );
         } else {
             MyApplication.pendingOrder.setLocation(MyApplication.locations.get(values.get("locationID")));
             MyApplication.pendingOrder.setLocationID(values.get("locationID"));

@@ -4,7 +4,7 @@ package com.shrmn.is416.tumpang;
  * Created by man on 19/3/18.
  */
 
-public class MenuItem {
+public abstract class MenuItem {
     private String path;
 
     public MenuItem(String path) {
@@ -18,6 +18,11 @@ public class MenuItem {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public abstract String getName();
+    public abstract void setName(String name);
+    public abstract double getUnitPrice();
+    public abstract void setUnitPrice(double price);
 
     @Override
     public boolean equals(Object o) {
@@ -33,4 +38,13 @@ public class MenuItem {
     public int hashCode() {
         return path.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+                "path='" + path + '\'' +
+                '}';
+    }
 }
+
+

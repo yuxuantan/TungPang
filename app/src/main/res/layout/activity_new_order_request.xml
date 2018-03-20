@@ -13,6 +13,7 @@
         android:text="Food Outlet"
         android:textColor="@color/colorTextHeading"
         android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@id/food_Outlet"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
@@ -21,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@id/label_amount"
         app:layout_constraintTop_toBottomOf="@id/label_outlet" />
 
     <TextView
@@ -31,6 +33,7 @@
         android:text="Tip Amount"
         android:textColor="@color/colorTextHeading"
         android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@id/tip_Amount"
         app:layout_constraintTop_toBottomOf="@id/food_Outlet" />
 
     <Spinner
@@ -39,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@id/label_location"
         app:layout_constraintTop_toBottomOf="@id/label_amount" />
 
     <TextView
@@ -49,6 +53,7 @@
         android:text="Meetup Location"
         android:textColor="@color/colorTextHeading"
         android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@id/meetup_location"
         app:layout_constraintTop_toBottomOf="@id/tip_Amount" />
 
     <EditText
@@ -60,6 +65,7 @@
         android:lines="4"
         android:maxLines="4"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/nextButton"
         app:layout_constraintTop_toBottomOf="@id/label_location" />
 
     <Button
@@ -71,6 +77,6 @@
         android:text="NEXT"
         android:textColor="@color/colorButtonText"
         android:textSize="20dp"
-        app:layout_constraintTop_toBottomOf="@id/meetup_location"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/meetup_location" />
 </android.support.constraint.ConstraintLayout>

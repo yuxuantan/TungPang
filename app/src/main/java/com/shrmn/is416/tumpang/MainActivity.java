@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
 
 import static com.shrmn.is416.tumpang.MyApplication.user;
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
     public void setNegativeWelcomeText() {
         labelWelcome.setText("We require your Telegram username for full app functionality.");
         labelWelcome.setTypeface(labelWelcome.getTypeface(), Typeface.ITALIC);
-
     }
 
     @Override
@@ -58,6 +58,14 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
                         labelWelcome.setText("Welcome, " + displayName + "!");
                     }
                     Log.d(TAG, "onVariableChanged: Not a first run.");
+
+
+                    // Subscibe to user's identifier as topic name
+                    String identifier = user.getIdentifier();
+                    if(identifier!=null){
+                        FirebaseMessaging.getInstance().subscribeToTopic(identifier);
+                        Log.e("Subscribed to topic:", identifier);
+                    }
                 }
             }
         });
