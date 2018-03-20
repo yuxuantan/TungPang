@@ -4,11 +4,12 @@ package com.shrmn.is416.tumpang;
  * Created by man on 19/3/18.
  */
 
-class Drink {
+class Drink extends MenuItem {
     private String name;
     private double unitPrice;
 
-    public Drink(String name, double unitPrice) {
+    public Drink(String path, String name, double unitPrice) {
+        super(path);
         this.name = name;
         this.unitPrice = unitPrice;
     }
@@ -34,6 +35,7 @@ class Drink {
         return "Drink{" +
                 "name='" + name + '\'' +
                 ", unitPrice=" + unitPrice +
+                ", path=" + super.getPath() +
                 '}';
     }
 }

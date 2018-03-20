@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
     public void setNegativeWelcomeText() {
         labelWelcome.setText("We require your Telegram username for full app functionality.");
         labelWelcome.setTypeface(labelWelcome.getTypeface(), Typeface.ITALIC);
-
     }
 
     @Override
