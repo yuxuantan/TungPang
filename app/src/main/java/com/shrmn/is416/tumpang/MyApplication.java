@@ -23,7 +23,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 
 import java.util.HashMap;
@@ -88,8 +87,6 @@ public class MyApplication extends Application {
         initialiseBeaconSubsystem();
         // Also loads the current User's record into this.User
         initialiseFirebaseDatabase();
-
-
 
 
 
@@ -169,12 +166,10 @@ public class MyApplication extends Application {
                                     user.setFirebaseInstanceID(token);
                                     Log.d(TAG, "onComplete: Token Retrieved = " + token);
                                     user.save();
-
                                 }
                             } else {
                                 Log.d(TAG, "No User document with ID " + uniqueID + "; Adding to database.");
                                 addUserToDB();
-
                             }
                             firstRunVariable.setFirstRun(user == null || (user.getTelegramUsername() == null && TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN));
                         }

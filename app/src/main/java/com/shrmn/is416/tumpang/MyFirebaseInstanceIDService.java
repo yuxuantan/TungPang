@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "FBInstanceIDService";
@@ -19,7 +18,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         // sending reg id to your server
         sendRegistrationToServer(refreshedToken);
-
     }
 
     private void sendRegistrationToServer(String refreshedToken) {
