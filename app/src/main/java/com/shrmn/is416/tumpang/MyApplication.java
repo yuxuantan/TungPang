@@ -99,7 +99,7 @@ public class MyApplication extends Application {
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0,
                 new Intent[]{notifyIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.man_only)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(false)
