@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class Menu {
+    private ArrayList<MenuItem> items;
     private ArrayList<Drink> drinks;
     private ArrayList<Food> food;
 
@@ -15,9 +16,32 @@ public class Menu {
         this.food = food;
     }
 
+    public Menu(ArrayList<MenuItem> items) {
+        this.items = items;
+    }
+
     public Menu() {
-        this.drinks = new ArrayList<>();
-        this.food = new ArrayList<>();
+        this.items = new ArrayList<>();
+    }
+
+    public ArrayList<MenuItem> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<MenuItem> items) {
+        this.items = items;
+    }
+
+    public void addItem(MenuItem item) {
+        items.add(item);
+    }
+
+    public void removeItem(MenuItem item) {
+        items.remove(item);
+    }
+
+    public void removeItem(int position) {
+        items.remove(position);
     }
 
     public ArrayList<Drink> getDrinks() {
@@ -39,8 +63,7 @@ public class Menu {
     @Override
     public String toString() {
         return "Menu{" +
-                "drinks=" + drinks +
-                ", food=" + food +
+                "items=" + items +
                 '}';
     }
 }

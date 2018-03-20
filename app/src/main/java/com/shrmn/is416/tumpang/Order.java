@@ -1,96 +1,91 @@
 package com.shrmn.is416.tumpang;
 
-public class Order {
-    private long orderID;
-    private long restaurantID;
-    private String menuItem;
-    private double menuPrice;
-    //How much commission earned can be calculated on app, then no need store, if its just a percentage of menuPrice
-    private double commissionPrice;
-    private long estimatedTimeOfDelivery;
-    private long deliveryManUserID;
-    private long customerUserID;
-    private long beaconIDMajor;
-    private long beaconIDMinor;
+import android.util.Log;
 
-    //String or lat long?? must convert if Lat long
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Order {
+    private static final String TAG = "OrderClass";
+    private String orderID;
+    private String locationID;
+    private String locationName;
+    private Location location;
+    // How much commission earned can be calculated on app, then no need store, if its just a percentage of menuPrice
+    private double tipAmount;
+    private long estimatedTimeOfDelivery;
+    private String deliveryManUserID;
+    private String customerUserID;
+    private HashMap<MenuItem, Integer> menuItems;
+
+    // String or lat long?? must convert if Lat long
     private String deliveryLocation;
     // 0-“unassigned”, 1-“deliveryInProcess”, 2-“completed”
-    private int status;
-
-    private String restaurantName;
+    private int status = 0;
 
 
-    public Order(long orderID, long restaurantID, String menuItem, double menuPrice, double commissionPrice, long estimatedTimeOfDelivery, long deliveryManUserID, long customerUserID, long beaconIDMajor, long beaconIDMinor, String deliveryLocation, int status, String restaurantName) {
+    public Order(String orderID, String locationID, String locationName, double tipAmount, long estimatedTimeOfDelivery, String deliveryManUserID, String customerUserID, HashMap<MenuItem, Integer> menuItems, String deliveryLocation, int status) {
         this.orderID = orderID;
-        this.restaurantID = restaurantID;
-        this.menuItem = menuItem;
-        this.menuPrice = menuPrice;
-        this.commissionPrice = commissionPrice;
+        this.locationID = locationID;
+        this.locationName = locationName;
+        this.tipAmount = tipAmount;
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
         this.deliveryManUserID = deliveryManUserID;
         this.customerUserID = customerUserID;
-        this.beaconIDMajor = beaconIDMajor;
-        this.beaconIDMinor = beaconIDMinor;
+        this.menuItems = menuItems;
         this.deliveryLocation = deliveryLocation;
         this.status = status;
-        this.restaurantName = restaurantName;
     }
 
-    public long getBeaconIDMinor() {
-        return beaconIDMinor;
+    public Order(Location location, String locationID, String locationName, double tipAmount, String deliveryLocation) {
+        this.location = location;
+        this.locationID = locationID;
+        this.locationName = locationName;
+        this.tipAmount = tipAmount;
+        this.deliveryLocation = deliveryLocation;
+        this.menuItems = new HashMap<>();
+        this.customerUserID = MyApplication.uniqueID;
     }
 
-    public void setBeaconIDMinor(long beaconIDMinor) {
-        this.beaconIDMinor = beaconIDMinor;
+    public Location getLocation() {
+        return location;
     }
 
-    public String getRestaurantName() {
-        return restaurantName;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
-
-    public long getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public void setOrderID(long orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
-    public long getRestaurantID() {
-        return restaurantID;
+    public String getLocationID() {
+        return locationID;
     }
 
-    public void setRestaurantID(long restaurantID) {
-        this.restaurantID = restaurantID;
+    public void setLocationID(String locationID) {
+        this.locationID = locationID;
     }
 
-    public String getMenuItem() {
-        return menuItem;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setMenuItem(String menuItem) {
-        this.menuItem = menuItem;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
-    public double getMenuPrice() {
-        return menuPrice;
+    public double getTipAmount() {
+        return tipAmount;
     }
 
-    public void setMenuPrice(double menuPrice) {
-        this.menuPrice = menuPrice;
-    }
-
-    public double getCommissionPrice() {
-        return commissionPrice;
-    }
-
-    public void setCommissionPrice(double commissionPrice) {
-        this.commissionPrice = commissionPrice;
+    public void setTipAmount(double tipAmount) {
+        this.tipAmount = tipAmount;
     }
 
     public long getEstimatedTimeOfDelivery() {
@@ -101,28 +96,28 @@ public class Order {
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
     }
 
-    public long getDeliveryManUserID() {
+    public String getDeliveryManUserID() {
         return deliveryManUserID;
     }
 
-    public void setDeliveryManUserID(long deliveryManUserID) {
+    public void setDeliveryManUserID(String deliveryManUserID) {
         this.deliveryManUserID = deliveryManUserID;
     }
 
-    public long getCustomerUserID() {
+    public String getCustomerUserID() {
         return customerUserID;
     }
 
-    public void setCustomerUserID(long customerUserID) {
+    public void setCustomerUserID(String customerUserID) {
         this.customerUserID = customerUserID;
     }
 
-    public long getbeaconIDMajor() {
-        return beaconIDMajor;
+    public HashMap<MenuItem, Integer> getMenuItems() {
+        return menuItems;
     }
 
-    public void setbeaconIDMajor(long beaconIDMajor) {
-        this.beaconIDMajor = beaconIDMajor;
+    public void setMenuItems(HashMap<MenuItem, Integer> menuItems) {
+        this.menuItems = menuItems;
     }
 
     public String getDeliveryLocation() {
@@ -141,23 +136,45 @@ public class Order {
         this.status = status;
     }
 
+    public void addMenuItem(MenuItem menuItem, int quantity) {
+        menuItems.put(menuItem, quantity);
+    }
+
+    public void removeMenuItem(MenuItem menuItem) {
+        menuItems.remove(menuItem);
+    }
+
     @Override
     public String toString() {
         return "Order{" +
-                "orderID=" + orderID +
-                ", restaurantID=" + restaurantID +
-                ", menuItem='" + menuItem + '\'' +
-                ", menuPrice=" + menuPrice +
-                ", commissionPrice=" + commissionPrice +
-                ", estimatedTimeOfDelivery=" + estimatedTimeOfDelivery +
-                ", deliveryManUserID=" + deliveryManUserID +
-                ", customerUserID=" + customerUserID +
-                ", beaconIDMajor=" + beaconIDMajor +
-                ", beaconIDMinor=" + beaconIDMinor +
+                "orderID='" + orderID + '\'' +
+                ", locationID='" + locationID + '\'' +
+                ", locationName='" + locationName + '\'' +
+                ", tipAmount=" + tipAmount +
+                ", customerUserID='" + customerUserID + '\'' +
+                ", menuItems=" + menuItems +
                 ", deliveryLocation='" + deliveryLocation + '\'' +
-                ", status=" + status +
-                ", restaurantName='" + restaurantName + '\'' +
                 '}';
+    }
+
+    public Map<String, Object> composeOrder() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("customerUserID", customerUserID);
+        map.put("deliveryLocation", deliveryLocation);
+        map.put("locationID", "/locations/" + locationID);
+        ArrayList<HashMap<String, Object>> items = new ArrayList<>();
+        for(MenuItem item : menuItems.keySet()) {
+            HashMap<String, Object> obj = new HashMap<>();
+            obj.put("item", item.getPath());
+            obj.put("qty", menuItems.get(item));
+            items.add(obj);
+//            Log.d(TAG, "composeOrder: Adding item " + menuItems.get(item) + " of " + item.getPath());
+        }
+        map.put("menuItems", items);
+        map.put("status", 0);
+        map.put("tipAmount", tipAmount);
+
+        return map;
     }
 }
 

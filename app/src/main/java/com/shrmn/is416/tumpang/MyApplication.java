@@ -45,7 +45,7 @@ public class MyApplication extends Application {
     // Holds the Estimote Beacon Manager
     public static BeaconManager beaconManager;
     // Holds the uniqueID retrieved from SharedPreferences (or created on first-run)
-    private static String uniqueID = null;
+    public static String uniqueID = null;
     // Holds the User object for the current user
     public static User user;
     // Holds the Firestore database instance. Used from a static context
@@ -54,6 +54,8 @@ public class MyApplication extends Application {
     public static FirstRunVariable firstRunVariable;
     // Holds retrieved locations
     public static HashMap<String, Location> locations;
+    // Holds the currently being-built order item
+    public static Order pendingOrder;
 
 //    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
