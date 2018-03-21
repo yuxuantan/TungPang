@@ -43,6 +43,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                }
 //            });
         }
+        else if(remoteMessage.getData()!=null){
+            Log.e(TAG, "Notification Body: " + remoteMessage.getData().toString());
+            showNotification("Notif: ",remoteMessage.getData().toString());
+        }
 
 
     }
@@ -55,7 +59,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0,
                 new Intent[]{notifyIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.man_only)
                 .setContentTitle(title)
                 .setContentText(message)
 //                .setAutoCancel(false)

@@ -9,8 +9,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.shrmn.is416.tumpang.utilities.FCMRestClient;
 import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 import static com.shrmn.is416.tumpang.MyApplication.user;
 
@@ -69,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
                 }
             }
         });
+
+
     }
 
     public void newOrderRequest(View view) {
@@ -80,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
         Intent ptg = new Intent(this, FulfilOrdersActivity.class);
         startActivity(ptg);
     }
+
+
 
 
 }
