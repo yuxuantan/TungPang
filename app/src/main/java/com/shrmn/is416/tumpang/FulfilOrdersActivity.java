@@ -1,6 +1,7 @@
 package com.shrmn.is416.tumpang;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -297,8 +298,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
+    public void goToFulfilAcceptedOrders(View view) {
+        Intent fulfilAcceptedOrders = new Intent(this, FulfilAcceptedOrdersActivity.class);
+        startActivity(fulfilAcceptedOrders);
+    }
 }

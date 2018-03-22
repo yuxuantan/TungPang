@@ -16,13 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/man_only" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
@@ -34,8 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewOrderRequestActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".NewOrderRequestActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".FulfilOrdersActivity" />
 
         <service android:name=".MyFirebaseMessagingService">
@@ -50,7 +56,12 @@
         </service>
 
         <activity android:name=".AddItemActivity" />
-        <activity android:name=".NewOrderRequestMenuActivity"></activity>
+        <activity android:name=".NewOrderRequestMenuActivity" />
+        <activity
+            android:name=".FulfilAcceptedOrdersActivity"
+            android:label="@string/title_activity_fulfil_accepted_orders"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".OrderDetailsActivity"></activity>
     </application>
 
 </manifest>
