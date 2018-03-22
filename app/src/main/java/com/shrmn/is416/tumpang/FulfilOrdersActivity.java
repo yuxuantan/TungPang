@@ -22,7 +22,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -53,6 +55,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     public BeaconRegion region;
 
     private static final String TAG = "FulfilOrderRequest";
+    public static FirebaseFirestore db;
 
     static {
 
@@ -328,16 +331,19 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                     Log.e("ref", Arrays.toString(references));
 
                                     String locationID = references[1];
+
                                     String tmp[] = references[2].split("\\[|\\]");
                                     Log.d(TAG, "onComplete: " + Arrays.toString(tmp));
 
                                     Location location = MyApplication.locations.get(locationID);
                                     MenuItem item = null;
-
+                                    Log.e("Location ID:", location.getMenu().getFood()+"");
                                     if(tmp[0].equals("food")) {
+                                        //Log.e("Location ID:", location.getMenu().getFood().toString());
                                         item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
                                     } else if(tmp[0].equals("drinks")) {
-                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
+                                        //Log.e("Location ID:", location.getMenu().getFood().toString());
+                                        item = location.getMenu().getDrinks().get(Integer.parseInt(tmp[1]));
                                     }
 
                                     menuItems.put(item, Integer.parseInt(menuItem.get("qty")));
@@ -389,6 +395,17 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 }
         );
     }
+    //Update Order's status and ETA
+    private void updateStatus(String status, double ETA, Order order){
+        Map<String, Object> data = new HashMap<>();
+        data.put("customerUserID",order.getCustomerUserID());
+        data.put("deliveryLocation",order.getDeliveryLocation());
+        data.put("locationID", order.getLocationID());
+        data.put("menuItems",order.getMenuItems());
+        data.put("status", status);
+        data.put("ETA", ETA);
+        db.collection("orders").document(order.getCustomerUserID()).set(data, SetOptions.merge());
 
+    }
 
 }

@@ -97,6 +97,7 @@ public class MyApplication extends Application {
         initialiseBeaconSubsystem();
         // Also loads the current User's record into this.User
         initialiseFirebaseDatabase();
+        retrieveLocations();
 
 
 
