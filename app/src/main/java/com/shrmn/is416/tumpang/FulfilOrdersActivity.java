@@ -1,6 +1,7 @@
 package com.shrmn.is416.tumpang;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -242,7 +243,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     private void refreshList(List<Beacon> beacons) {
 
         //CONNECT TO DB, pull list of unassigned and set here!! unassignedOrders = ??, Filter again
-        Log.d("Refreshed", "" + allOrders.size());
+//        Log.d("Refreshed", "" + allOrders.size());
         unassignedOrders.clear();
         for (Order o : allOrders) {
             for (Beacon beacon : beacons) {
@@ -344,9 +345,13 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                     } else if(tmp[0].equals("drinks")) {
                                         //Log.e("Location ID:", location.getMenu().getFood().toString());
                                         item = location.getMenu().getDrinks().get(Integer.parseInt(tmp[1]));
+//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
+                                    } else if(tmp[0].equals("drinks")) {
+//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
+
                                     }
 
-                                    menuItems.put(item, Integer.parseInt(menuItem.get("qty")));
+//                                    menuItems.put(item, Integer.parseInt(menuItem.get("qty")));
                                 }
 
 //                                        menuItems.put(,menuItem);
@@ -408,4 +413,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     }
 
+    public void goToFulfilAcceptedOrders(View view) {
+        Intent fulfilAcceptedOrders = new Intent(this, FulfilAcceptedOrdersActivity.class);
+        startActivity(fulfilAcceptedOrders);
+    }
 }

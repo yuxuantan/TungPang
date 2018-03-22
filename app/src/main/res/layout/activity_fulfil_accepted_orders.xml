@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shrmn.is416.tumpang.FulfilOrdersActivity"
+    tools:context="com.shrmn.is416.tumpang.FulfilAcceptedOrdersActivity"
     android:orientation="vertical">
 
     <ImageButton
@@ -14,18 +14,14 @@
         android:onClick="finishActivity"
         android:scaleType="fitXY"
         android:src="@drawable/back_btn" />
+
+
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fulfil Orders"
-        android:textSize="30sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToFulfilAcceptedOrders"
-        android:text="View Accepted Orders" />
-
+        android:text="MyAccepted Orders"
+        android:textSize="30sp" />
 
     <ListView
         android:id="@+id/orders_list"
