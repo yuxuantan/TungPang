@@ -22,12 +22,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class MyApplication extends Application {
@@ -55,6 +58,8 @@ public class MyApplication extends Application {
     public static FirstRunVariable firstRunVariable;
     // Holds retrieved locations
     public static HashMap<String, Location> locations;
+    public static ArrayList<String> locationIDs;
+    public static ArrayList<String> locationNames;
     // Holds the currently being-built order item
     public static Order pendingOrder;
 
@@ -85,6 +90,8 @@ public class MyApplication extends Application {
 
         firstRunVariable = new FirstRunVariable();
         locations = new HashMap<>();
+        locationIDs = new ArrayList<>();
+        locationNames = new ArrayList<>();
 
         // Abstracted these parts into subroutines
         initialiseBeaconSubsystem();
@@ -197,7 +204,64 @@ public class MyApplication extends Application {
                 });
     }
 
+    public static void retrieveLocations() {
+        if(!locations.isEmpty()) {
+            return;
+        }
+
+        MyApplication.db.collection("locations").get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                String locationID = document.getId();
+                                Map<String, Object> data = document.getData();
+                                ArrayList<Drink> drinks = new ArrayList<>();
+                                ArrayList<Food> food = new ArrayList<>();
+                                ArrayList<MenuItem> items = new ArrayList<>();
+
+                                Log.d(TAG, document.getId() + " => " + data);
+
+                                Map<String, Object> menuObj = (Map<String, Object>) data.get("menu");
+                                ArrayList<Map<String, Object>> foodObj = (ArrayList<Map<String, Object>>) menuObj.get("food");
+                                ArrayList<Map<String, Object>> drinksObj = (ArrayList<Map<String, Object>>) menuObj.get("drinks");
+
+                                String path = document.getReference().getPath();
+
+                                for (int i = 0; i < foodObj.size(); i++) {
+                                    Map<String, Object> foodItem = foodObj.get(i);
+                                    food.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
+                                    items.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
+                                }
+
+                                for (int i = 0; i < drinksObj.size(); i++) {
+                                    Map<String, Object> drinkItem = drinksObj.get(i);
+                                    drinks.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
+                                    items.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
+                                }
 
 
+                                MyApplication.locations.put(locationID,
+                                        new Location(
+                                                locationID,
+                                                data.get("name").toString(),
+                                                data.get("address").toString(),
+                                                123,
+                                                456,
+                                                new Menu(items)
+                                        )
+                                );
+                                locationIDs.add(locationID);
+                                locationNames.add(data.get("name").toString());
+                            }
+                            Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                }
+        );
+    }
 
 }

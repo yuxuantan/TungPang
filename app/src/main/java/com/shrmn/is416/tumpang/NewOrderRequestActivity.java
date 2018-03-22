@@ -31,10 +31,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
     private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
-    private ArrayList<String> locationIDs;
-    private ArrayList<String> locationNames;
     private Map<String, String> values;
-    private static Order pendingOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +40,6 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
         dynamicSpinner = findViewById(R.id.food_Outlet);
 
-        locationNames = new ArrayList<>();
-        locationIDs = new ArrayList<>();
         values = new HashMap<>();
 
         setTipAmountAdapterContents();
@@ -52,6 +47,11 @@ public class NewOrderRequestActivity extends AppCompatActivity {
     }
 
     private void retrieveLocations() {
+        if(!MyApplication.locations.isEmpty()) {
+            setAdapterContents();
+            return;
+        }
+
         MyApplication.db.collection("locations").get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -95,8 +95,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                                 new Menu(items)
                                         )
                                 );
-                                locationIDs.add(locationID);
-                                locationNames.add(data.get("name").toString());
+                                MyApplication.locationIDs.add(locationID);
+                                MyApplication.locationNames.add(data.get("name").toString());
                             }
                             Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
                             setAdapterContents();
@@ -110,8 +110,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
     private void setAdapterContents() {
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, locationNames);
+        adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, MyApplication.locationNames);
 
         dynamicSpinner.setAdapter(adapter);
 
@@ -120,8 +120,8 @@ public class NewOrderRequestActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 Log.v(TAG, (String) parent.getItemAtPosition(position));
-                Log.d(TAG, "onItemSelected: " + locationIDs.get(position));
-                values.put("locationID", locationIDs.get(position));
+                Log.d(TAG, "onItemSelected: " + MyApplication.locationIDs.get(position));
+                values.put("locationID", MyApplication.locationIDs.get(position));
                 values.put("locationName", (String) parent.getItemAtPosition(position));
             }
 
