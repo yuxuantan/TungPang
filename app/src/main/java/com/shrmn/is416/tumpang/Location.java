@@ -1,19 +1,57 @@
 package com.shrmn.is416.tumpang;
 
 public class Location {
+    public String getLocationID() {
+        return locationID;
+    }
+
+    public void setLocationID(String locationID) {
+        this.locationID = locationID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBeaconMacAddress() {
+        return beaconMacAddress;
+    }
+
+    public void setBeaconMacAddress(String beaconMacAddress) {
+        this.beaconMacAddress = beaconMacAddress;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
     private String locationID;
     private String name;
     private String address;
-    private long beaconIDMajor;
-    private long beaconIDMinor;
+    private String beaconMacAddress;
+//    private long beaconIDMajor;
+//    private long beaconIDMinor;
     private Menu menu;
 
-    public Location (String locationID, String name, String address, long beaconIDMajor, long beaconIDMinor, Menu menu){
+    public Location (String locationID, String name, String address, String beaconMacAddress, Menu menu){
         this.locationID = locationID;
         this.name = name;
         this.address = address;
-        this.beaconIDMajor = beaconIDMajor;
-        this.beaconIDMinor = beaconIDMinor;
+        this.beaconMacAddress = beaconMacAddress;
+//        this.beaconIDMajor = beaconIDMajor;
+//        this.beaconIDMinor = beaconIDMinor;
         this.menu = menu;
     }
 
@@ -42,8 +80,8 @@ public class Location {
                 "locationID='" + locationID + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", beaconIDMajor=" + beaconIDMajor +
-                ", beaconIDMinor=" + beaconIDMinor +
+                ", beaconMacAdd=" + beaconMacAddress +
+//                ", beaconIDMinor=" + beaconIDMinor +
                 ", menu=" + menu +
                 '}';
     }

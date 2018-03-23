@@ -98,6 +98,7 @@ public class MyApplication extends Application {
         // Also loads the current User's record into this.User
         initialiseFirebaseDatabase();
         retrieveLocations();
+//        retrieveBeacons();
 
 
 
@@ -205,6 +206,24 @@ public class MyApplication extends Application {
                 });
     }
 
+//    public static void retrieveBeacons(){
+//        MyApplication.db.collection("beacons").get().addOnCompleteListener(
+//                new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            for(DocumentSnapshot document : task.getResult()){
+//                                String beaconMacAdd = document.getId();
+//                                Map<String, Object> data = document.getData();
+//
+//                                Log.e("beacon", document.getId() + " => " + data);
+//
+//                            }
+//                        }
+//                    }
+//                }
+//        );
+//    }
     public static void retrieveLocations() {
         if(!locations.isEmpty()) {
             return;
@@ -248,15 +267,14 @@ public class MyApplication extends Application {
                                                 locationID,
                                                 data.get("name").toString(),
                                                 data.get("address").toString(),
-                                                123,
-                                                456,
+                                                data.get("beaconMacAddress").toString(),
                                                 new Menu(items)
                                         )
                                 );
                                 locationIDs.add(locationID);
                                 locationNames.add(data.get("name").toString());
                             }
-                            Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
+//                            Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }

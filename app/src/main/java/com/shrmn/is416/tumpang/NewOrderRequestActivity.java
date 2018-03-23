@@ -90,8 +90,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                                                 locationID,
                                                 data.get("name").toString(),
                                                 data.get("address").toString(),
-                                                123,
-                                                456,
+                                                data.get("beaconMacAddress").toString(),
                                                 new Menu(items)
                                         )
                                 );

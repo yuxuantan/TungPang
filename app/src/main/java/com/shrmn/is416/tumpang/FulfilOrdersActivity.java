@@ -47,9 +47,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 public class FulfilOrdersActivity extends AppCompatActivity {
 
     //LIST OF ORDERS BEFORE LOCATION FILTER - For now is static list
-    private static List<Order> allOrders;
-
-    private static List<Order> unassignedOrders;
+    private static List<Order> allUnassignedOrders;
     private static List<String> unassignedRestaurantNames = new ArrayList<>();
 
     public BeaconManager beaconManager;
@@ -60,39 +58,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     static {
 
-        // HARD CODED PORTION
-        // ** Add only orders that have status==0 ie. "unassigned" into the lists
-        allOrders = new ArrayList<>();
-//
-//        allOrders.add(new Order(1,
-//                101,
-//                "Chicken Rice",
-//                3.0,
-//                0.3,
-//                20,
-//                13,
-//                24,
-//                6722,
-//                37991,
-//                "SIS GSR 2-3",
-//                0,
-//                "Koufu"));
-//
-//        allOrders.add(new Order(1,
-//                102,
-//                "Hokkien Mee",
-//                3.0,
-//                0.3,
-//                20,
-//                13,
-//                24,
-//                16466,
-//                55391,
-//                "SIS GSR 2-3",
-//                0,
-//                "Waterloo"));
-
-        unassignedOrders = new ArrayList<>();
+        allUnassignedOrders = new ArrayList<>();
         unassignedRestaurantNames = new ArrayList<>();
 
     }
@@ -102,7 +68,6 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fulfil_orders);
 
-        MyApplication.retrieveLocations();
         retrieveOrders();
 
 
@@ -123,7 +88,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 beaconManager.stopRanging(region);
 
                 String selectedOrderTitle = parent.getItemAtPosition(position).toString();
-                Order selectedOrder = unassignedOrders.get(position);
+                Order selectedOrder = allUnassignedOrders.get(position);
 
                 AlertDialog alertDialog = new AlertDialog.Builder(FulfilOrdersActivity.this).create();
                 alertDialog.setTitle(selectedOrderTitle);
@@ -142,15 +107,13 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                 // ACCEPT JOB!!
                                 // Remove from list
                                 unassignedRestaurantNames.remove(position);
-                                unassignedOrders.remove(position);
+                                allUnassignedOrders.remove(position);
                                 adapter.notifyDataSetChanged();
 
                                 // Send notification to customer with Certain UserID - temp send to self
                                 if (MyApplication.user != null && MyApplication.user.getIdentifier() != null) {
                                     sendNotif(MyApplication.user.getIdentifier());
                                 }
-                                // Remove from actual DB using API - after API is set up
-
                                 //Start ranging after done
                                 beaconManager.startRanging(region);
                             }
@@ -244,19 +207,19 @@ public class FulfilOrdersActivity extends AppCompatActivity {
     private void refreshList(List<Beacon> beacons) {
 
         //CONNECT TO DB, pull list of unassigned and set here!! unassignedOrders = ??, Filter again
-//        Log.d("Refreshed", "" + allOrders.size());
-        unassignedOrders.clear();
-        for (Order o : allOrders) {
+        retrieveOrders();
+        for (Order o : allUnassignedOrders) {
             for (Beacon beacon : beacons) {
-//                if (beacon.getMajor() == o.getbeaconIDMajor() && beacon.getMinor() == o.getBeaconIDMinor()) {
-//                    unassignedOrders.add(o);
-//                }
+                Log.e("BEACON DETECTED", beacon.getMacAddress().toString());
+                if(beacon.getMacAddress().equals(MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress())){
+                    // Add beacon to list of beacons to display
+                }
             }
         }
         unassignedRestaurantNames.clear();
 
-        for (Order o : unassignedOrders) {
-//            unassignedRestaurantNames.add(o.getRestaurantName());
+        for (Order o : allUnassignedOrders) {
+            unassignedRestaurantNames.add(o.getLocationName());
         }
         Log.d("Refreshed", unassignedRestaurantNames.toString());
 
@@ -319,7 +282,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 //                                ArrayList<MenuItem> items = new ArrayList<>();
 
 //                                Log.e(TAG, document.getId() + " => " + data);
-                                allOrders.clear();
+                                allUnassignedOrders.clear();
                                 // ArrayList of HashMaps, 1 for each item. Key(item and qty)
                                 ArrayList<Map<String, String>> orderMenuItemsObj = (ArrayList<Map<String, String>>) data.get("menuItems");
 

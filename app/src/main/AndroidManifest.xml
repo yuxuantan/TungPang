@@ -58,11 +58,8 @@
         <activity android:name=".AddItemActivity" />
         <activity android:name=".NewOrderRequestMenuActivity" />
         <activity android:name=".OrderDetailsActivity" />
-        <activity android:name=".FulfilAcceptedOrdersActivity"><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".FulfilAcceptedOrdersActivity"/>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
     </application>
 
 </manifest>
