@@ -105,6 +105,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         MyApplication.retrieveLocations();
         retrieveOrders();
 
+
         // Initialize List View
         ListView lv = (ListView) findViewById(R.id.orders_list);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -341,10 +342,10 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                                     Log.e("Location ID:", location.getMenu().getFood()+"");
                                     if(tmp[0].equals("food")) {
                                         //Log.e("Location ID:", location.getMenu().getFood().toString());
-                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
+//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
                                     } else if(tmp[0].equals("drinks")) {
                                         //Log.e("Location ID:", location.getMenu().getFood().toString());
-                                        item = location.getMenu().getDrinks().get(Integer.parseInt(tmp[1]));
+//                                        item = location.getMenu().getDrinks().get(Integer.parseInt(tmp[1]));
 //                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
                                     } else if(tmp[0].equals("drinks")) {
 //                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
@@ -412,6 +413,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         db.collection("orders").document(order.getCustomerUserID()).set(data, SetOptions.merge());
 
     }
+
 
     public void goToFulfilAcceptedOrders(View view) {
         Intent fulfilAcceptedOrders = new Intent(this, FulfilAcceptedOrdersActivity.class);

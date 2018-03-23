@@ -38,7 +38,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fulfil_orders);
+        setContentView(R.layout.activity_fulfil_accepted_orders);
 
 //LIST VIEW SET
 
