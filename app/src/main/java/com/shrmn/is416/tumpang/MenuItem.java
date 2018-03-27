@@ -5,10 +5,19 @@ package com.shrmn.is416.tumpang;
  */
 
 public abstract class MenuItem {
+    private String name;
+    private double unitPrice;
+    private int quantity;
     private String path;
 
     public MenuItem(String path) {
         this.path = path;
+    }
+
+    public MenuItem(String name, double unitPrice, int quantity){
+        this.name = name;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
     }
 
     public String getPath() {
@@ -23,6 +32,8 @@ public abstract class MenuItem {
     public abstract void setName(String name);
     public abstract double getUnitPrice();
     public abstract void setUnitPrice(double price);
+    public abstract int getQuantity();
+    public abstract void setQuantity(int quantity);
 
     @Override
     public boolean equals(Object o) {

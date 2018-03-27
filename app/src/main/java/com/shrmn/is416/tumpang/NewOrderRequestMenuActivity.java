@@ -1,5 +1,6 @@
 package com.shrmn.is416.tumpang;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -12,7 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,11 +42,10 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
 
     private ListView menuListView;
     private Intent addItemIntent;
-    private ArrayAdapter<MenuItem> adapter;
+    private MenuItemAdapter adapter;
     private Menu menu;
     private Location location;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_order_request_menu);
@@ -59,8 +62,8 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode + " data=" + data);
 
-        if (requestCode == REQ_CODE_ADD_ITEM) {
-            if (resultCode == RESULT_OK) {
+        if (resultCode != RESULT_CANCELED && data != null) {
+            if (requestCode == REQ_CODE_ADD_ITEM) {
 //                int quantity = data.getIntExtra("quantity", -1);
 //                int menuItemPosition = data.getIntExtra("menuItemPosition", -1);
 //
@@ -73,23 +76,25 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
 //                }
                 refreshList();
             } else {
-                Snackbar.make(findViewById(R.id.menu_list), "Adding item cancelled!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.menu_list), "Adding menu item cancelled!", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
 
     private void refreshList() {
+        HashMap menuMap = MyApplication.pendingOrder.getMenuItems();
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
+        for(Object o: menuMap.keySet()){
+            MenuItem menuItem = (MenuItem) o;
+            menuItem.setQuantity((Integer) menuMap.get(menuItem));
+            menuItems.add(menuItem);
+        }
 
-        adapter = new ArrayAdapter<>(
-                NewOrderRequestMenuActivity.this,
-                R.layout.menu_list_layout,
-                R.id.mylistitem,
-                new ArrayList<>(MyApplication.pendingOrder.getMenuItems().keySet())
-        );
-
+        MyApplication.pendingOrder.setPendingMenuItems(menuItems);
+        adapter = new MenuItemAdapter(this, 0, menuItems);
         menuListView.setAdapter(adapter);
 
-        Snackbar.make(findViewById(R.id.menu_list), "Todo List Updated!", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.menu_list), "Order list updated!", Snackbar.LENGTH_SHORT).show();
     }
 
     public void addItemButton(View view) {

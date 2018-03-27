@@ -22,7 +22,7 @@
         <TextView
             android:layout_columnWeight="6"
             android:layout_rowWeight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:padding="16dp"
             android:text="Your Order"
             android:textColor="#FFFFFF"
@@ -41,12 +41,67 @@
         android:text="Please confirm the following details:" />
 
     <TextView
-        android:id="@+id/order_dump"
+        android:id="@+id/order_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:gravity="center"
-        android:text="ORDER DETAILS" />
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/outlet_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/outlet_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/delivery_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/final_tip_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/order_qty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/order_bill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/total_orderbill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center"/>
 
 </LinearLayout>

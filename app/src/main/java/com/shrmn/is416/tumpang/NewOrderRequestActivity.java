@@ -133,7 +133,7 @@ public class NewOrderRequestActivity extends AppCompatActivity {
 
     private void setTipAmountAdapterContents() {
 
-        String[] tipAmounts = {"0.50", "1.00", "2.00", "3.00", "4.00", "5.00"};
+        String[] tipAmounts = {"$ 0.50", "$ 1.00", "$ 2.00", "$ 3.00", "$ 4.00", "$ 5.00"};
         ArrayAdapter adapterTipAmount = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, tipAmounts);
 
@@ -164,14 +164,14 @@ public class NewOrderRequestActivity extends AppCompatActivity {
                     MyApplication.locations.get(values.get("locationID")),
                     values.get("locationID"),
                     values.get("locationName"),
-                    Double.parseDouble(values.get("tipAmount")),
+                    Double.parseDouble((values.get("tipAmount").substring(2))),
                     editView.getText().toString()
             );
         } else {
             MyApplication.pendingOrder.setLocation(MyApplication.locations.get(values.get("locationID")));
             MyApplication.pendingOrder.setLocationID(values.get("locationID"));
             MyApplication.pendingOrder.setLocationName(values.get("locationName"));
-            MyApplication.pendingOrder.setTipAmount(Double.parseDouble(values.get("tipAmount")));
+            MyApplication.pendingOrder.setTipAmount(Double.parseDouble((values.get("tipAmount").substring(2))));
             MyApplication.pendingOrder.setDeliveryLocation(editView.getText().toString());
         }
 

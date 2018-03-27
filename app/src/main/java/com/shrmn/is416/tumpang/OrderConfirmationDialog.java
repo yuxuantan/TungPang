@@ -19,6 +19,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shrmn.is416.tumpang.utilities.FCMRestClient;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -33,13 +35,52 @@ public class OrderConfirmationDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        ArrayList<MenuItem> pendingMenuItems = (ArrayList<MenuItem>) MyApplication.pendingOrder.getPendingMenuItems();
+        String outletName = MyApplication.pendingOrder.getLocation().getName();
+        String outletAddress = MyApplication.pendingOrder.getLocation().getAddress();
+        String deliveryLocation = MyApplication.pendingOrder.getDeliveryLocation();
+
+        double tipAmount = MyApplication.pendingOrder.getTipAmount();
+        int totalOrderQuantity = 0;
+        double OrderBill = 0;
+        for(MenuItem menuItem: pendingMenuItems ) {
+            totalOrderQuantity += menuItem.getQuantity();
+            OrderBill += menuItem.getUnitPrice() * menuItem.getQuantity();
+        }
+        String strTipAmount = String.format("%.2f", tipAmount);
+        String strOrderBill = String.format("%.2f", OrderBill);
+
+        double totalOrderBill = tipAmount + OrderBill;
+        String strTotalOrderBill = String.format("%.2f", totalOrderBill);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_orderconfirmation, null);
-        TextView dump = dialogView.findViewById(R.id.order_dump);
 
-        dump.setText(MyApplication.pendingOrder.toString());
+        TextView orderUser = dialogView.findViewById(R.id.order_user);
+        orderUser.setText("Order Username: " + user.getName());
+
+        TextView outletLocation = dialogView.findViewById(R.id.outlet_name);
+        outletLocation.setText("Outlet Name: " + outletName);
+
+        TextView outletAdd = dialogView.findViewById(R.id.outlet_address);
+        outletAdd.setText("Outlet Address: " + outletAddress);
+
+        TextView deliveryLoc = dialogView.findViewById(R.id.delivery_location);
+        deliveryLoc.setText("Delivery Location: " + deliveryLocation);
+
+        TextView tip = dialogView.findViewById(R.id.final_tip_amount);
+        tip.setText("Tip Amount: $ " + strTipAmount);
+
+        TextView orderQty = dialogView.findViewById(R.id.order_qty);
+        orderQty.setText("Order Total Quantity: " +totalOrderQuantity+"");
+
+        TextView orderBill = dialogView.findViewById(R.id.order_bill);
+        orderBill.setText("Order Total BillAmount: $ " + strOrderBill);
+
+        TextView totalBill = dialogView.findViewById(R.id.total_orderbill);
+        totalBill.setText("Order Total BillAmount: $ " + strTotalOrderBill);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout

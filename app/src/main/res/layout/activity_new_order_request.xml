@@ -80,6 +80,7 @@
         android:background="@color/colorButton"
         android:onClick="next"
         android:text="NEXT"
+        android:textSize="20dp"
         android:textColor="@color/colorButtonText"
         android:layout_margin="20sp"
         app:layout_constraintBottom_toBottomOf="parent"/>

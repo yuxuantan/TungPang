@@ -7,6 +7,7 @@ package com.shrmn.is416.tumpang;
 class Food extends MenuItem {
     private String name;
     private double unitPrice;
+    private int quantity;
 
     public Food(String path, String name, double unitPrice) {
         super(path);
@@ -28,6 +29,16 @@ class Food extends MenuItem {
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    @Override
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    @Override
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     @Override

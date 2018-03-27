@@ -1,5 +1,6 @@
 package com.shrmn.is416.tumpang;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -35,6 +36,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         dynamicSpinner = findViewById(R.id.item_name);
 
+        // Set a default order ID value for
         location = MyApplication.pendingOrder.getLocation();
         menu = location.getMenu();
         Log.d(TAG, "onCreate: " + location.getMenu().getItems());
@@ -60,7 +62,7 @@ public class AddItemActivity extends AppCompatActivity {
                                        int position, long id) {
                 TextView label = findViewById(R.id.unit_price_value);
                 selectedMenuItem = menu.getItems().get(position);
-                label.setText("$" + selectedMenuItem.getUnitPrice());
+                label.setText("$ " + selectedMenuItem.getUnitPrice());
             }
 
             @Override
@@ -77,15 +79,18 @@ public class AddItemActivity extends AppCompatActivity {
 
     public void addItem(View view) {
         Log.d(TAG, "addItem: Called.");
-//        Intent it = getIntent();
+        Intent output = getIntent();
 
-        MyApplication.pendingOrder.addMenuItem(selectedMenuItem, Integer.parseInt(quantityEditText.getText().toString()));
-
+        try{
+            MyApplication.pendingOrder.addMenuItem(selectedMenuItem, Integer.parseInt(quantityEditText.getText().toString()));
         // Obtain Quantity
 //        it.putExtra("quantity", Integer.parseInt(quantityEditText.getText().toString()));
-
+        }catch(NumberFormatException ex){ // handle your exception
+            back(view);
+        }
         // Return result
-        setResult(RESULT_OK);
+
+        setResult(RESULT_OK,output);
         finish();
     }
 
