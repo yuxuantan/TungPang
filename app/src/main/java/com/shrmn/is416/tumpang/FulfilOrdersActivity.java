@@ -309,6 +309,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            allOrders.clear();
                             for (DocumentSnapshot document : task.getResult()) {
 //                                String locationID = document.getId();
                                 Map<String, Object> data = document.getData();
@@ -318,7 +319,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 //                                ArrayList<MenuItem> items = new ArrayList<>();
 
 //                                Log.e(TAG, document.getId() + " => " + data);
-                                allOrders.clear();
+
                                 // ArrayList of HashMaps, 1 for each item. Key(item and qty)
                                 ArrayList<Map<String, String>> orderMenuItemsObj = (ArrayList<Map<String, String>>) data.get("menuItems");
 
@@ -338,26 +339,24 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
                                     Location location = MyApplication.locations.get(locationID);
                                     MenuItem item = null;
-                                    Log.e("Location ID:", location.getMenu().getFood()+"");
                                     if(tmp[0].equals("food")) {
-                                        //Log.e("Location ID:", location.getMenu().getFood().toString());
-                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
+                                        Log.e("FoodItem", location.getMenu().getItems().get(Integer.parseInt(tmp[1])).toString());
+                                        item = location.getMenu().getItems().get(Integer.parseInt(tmp[1]));
                                     } else if(tmp[0].equals("drinks")) {
-                                        //Log.e("Location ID:", location.getMenu().getFood().toString());
-                                        item = location.getMenu().getDrinks().get(Integer.parseInt(tmp[1]));
-//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
-                                    } else if(tmp[0].equals("drinks")) {
-//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
-
+                                        Log.e("DrinkItem:", location.getMenu().getItems().get(Integer.parseInt(tmp[1])).toString());
+                                        item = location.getMenu().getItems().get(Integer.parseInt(tmp[1]));
                                     }
 
-//                                    menuItems.put(item, Integer.parseInt(menuItem.get("qty")));
+                                    menuItems.put(item, Integer.parseInt(String.valueOf(menuItem.get("qty"))));
+                                    Order order = new Order(document.getId(),locationID,locationID,(Double)data.get("tipAmount"),0L,"nil",data.get("customerUserID")+"",menuItems,data.get("deliveryLocation")+"",0);
+                                    Log.e("Order: ",order.toString());
                                 }
 
-//                                        menuItems.put(,menuItem);
+                                      // menuItems.put(,menuItem);
 //                                    }
-//                                    Log.e("Order: ", object.toString());
-//                                    allOrders.add(new Order(object.));
+
+                                    //Log.e("Order: ", object.toString());
+                                    //allOrders.add(new Order(object.));
 
 //                                Map<String, Object> menuObj = (Map<String, Object>) data.get("menu");
 //                                ArrayList<Map<String, Object>> foodObj = (ArrayList<Map<String, Object>>) menuObj.get("food");
