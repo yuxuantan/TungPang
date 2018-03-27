@@ -76,7 +76,7 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
 //                }
                 refreshList();
             } else {
-                Snackbar.make(findViewById(R.id.menu_list), "Adding item cancelled!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.menu_list), "Adding menu item cancelled!", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -90,10 +90,11 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
             menuItems.add(menuItem);
         }
 
+        MyApplication.pendingOrder.setPendingMenuItems(menuItems);
         adapter = new MenuItemAdapter(this, 0, menuItems);
         menuListView.setAdapter(adapter);
 
-        Snackbar.make(findViewById(R.id.menu_list), "Todo List Updated!", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.menu_list), "Order list updated!", Snackbar.LENGTH_SHORT).show();
     }
 
     public void addItemButton(View view) {

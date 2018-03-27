@@ -62,7 +62,7 @@ public class AddItemActivity extends AppCompatActivity {
                                        int position, long id) {
                 TextView label = findViewById(R.id.unit_price_value);
                 selectedMenuItem = menu.getItems().get(position);
-                label.setText("$" + selectedMenuItem.getUnitPrice());
+                label.setText("$ " + selectedMenuItem.getUnitPrice());
             }
 
             @Override
@@ -81,10 +81,13 @@ public class AddItemActivity extends AppCompatActivity {
         Log.d(TAG, "addItem: Called.");
         Intent output = getIntent();
 
-        MyApplication.pendingOrder.addMenuItem(selectedMenuItem, Integer.parseInt(quantityEditText.getText().toString()));
+        try{
+            MyApplication.pendingOrder.addMenuItem(selectedMenuItem, Integer.parseInt(quantityEditText.getText().toString()));
         // Obtain Quantity
 //        it.putExtra("quantity", Integer.parseInt(quantityEditText.getText().toString()));
-
+        }catch(NumberFormatException ex){ // handle your exception
+            back(view);
+        }
         // Return result
 
         setResult(RESULT_OK,output);

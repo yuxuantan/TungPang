@@ -2,6 +2,7 @@ package com.shrmn.is416.tumpang;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Order {
@@ -16,6 +17,7 @@ public class Order {
     private String deliveryManUserID;
     private String customerUserID;
     private HashMap<MenuItem, Integer> menuItems;
+    private List<MenuItem> pendingMenuItems;
 
     // String or lat long?? must convert if Lat long
     private String deliveryLocation;
@@ -173,6 +175,14 @@ public class Order {
 
     public HashMap<MenuItem,Integer> getMenuItems() {
         return menuItems;
+    }
+
+    public List<MenuItem> getPendingMenuItems() {
+        return pendingMenuItems;
+    }
+
+    public void setPendingMenuItems(List<MenuItem> pendingMenuItems) {
+        this.pendingMenuItems = pendingMenuItems;
     }
 }
 

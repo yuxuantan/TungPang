@@ -31,20 +31,17 @@ public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d(TAG, "PLEASE REACH HERE PLEASE");
         View listItem = convertView;
         if (listItem == null) {
-            Log.d(TAG, "listItem is null");
             listItem = LayoutInflater.from(context).inflate(R.layout.menu_list_layout, parent, false);
         }
 
-        Log.d(TAG, "listItem populated " + listItem.toString());
         MenuItem detail = pendingMenuItems.get(position);
         TextView foodName = (TextView) listItem.findViewById(R.id.pendingFoodName);
         foodName.setText(detail.getName());
 
         TextView unitPrice = (TextView) listItem.findViewById(R.id.pendingUnitPrice);
-        unitPrice.setText(detail.getUnitPrice()+"");
+        unitPrice.setText("$ " + detail.getUnitPrice()+"");
 
         TextView quantity = (TextView) listItem.findViewById(R.id.pendingUnitQty);
         quantity.setText("X " + detail.getQuantity()+"");
