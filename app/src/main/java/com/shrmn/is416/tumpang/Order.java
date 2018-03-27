@@ -1,7 +1,5 @@
 package com.shrmn.is416.tumpang;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,10 +110,6 @@ public class Order {
         this.customerUserID = customerUserID;
     }
 
-    public HashMap<MenuItem, Integer> getMenuItems() {
-        return menuItems;
-    }
-
     public void setMenuItems(HashMap<MenuItem, Integer> menuItems) {
         this.menuItems = menuItems;
     }
@@ -175,6 +169,10 @@ public class Order {
         map.put("tipAmount", tipAmount);
 
         return map;
+    }
+
+    public HashMap<MenuItem,Integer> getMenuItems() {
+        return menuItems;
     }
 }
 

@@ -9,12 +9,14 @@
 
     <ListView
         android:id="@+id/menu_list"
-        android:layout_width="370dp"
-        android:layout_height="370dp"
+        android:layout_margin="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
         android:choiceMode="none"
         android:nestedScrollingEnabled="true"
         android:padding="10sp"
-        tools:layout_editor_absoluteX="7dp" />
+        android:orientation="horizontal"
+    />
 
     <Button
         android:id="@+id/add_item_button"

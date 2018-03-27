@@ -4,38 +4,53 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/mylistitem"
-    android:columnCount="3"
-    android:padding="20dp">
+    android:columnCount="4">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_width="106dp"
         android:layout_column="0"
         android:layout_row="0"
-        android:text="Food Name:" />
+        android:text="Food Name:"
+        android:textSize="18dp"
+        android:textColor="@color/colorTextHeading"/>
 
     <TextView
-        android:id="@+/NewOrderfoodName"
-        android:layout_width="200dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/pendingFoodName"
+        android:layout_width="180dp"
         android:layout_column="1"
         android:layout_row="0" />
 
     <TextView
-        android:layout_width="80dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:layout_width="106dp"
         android:layout_column="0"
         android:layout_row="1"
-        android:text="Unit Price:" />
+        android:text="Unit Price:"
+        android:textSize="18dp"
+        android:textColor="@color/colorTextHeading"/>
 
     <TextView
-        android:id="@+/NewOrderUnitPrice"
-        android:layout_width="200dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/pendingUnitPrice"
+        android:layout_width="180dp"
         android:layout_column="1"
         android:layout_row="1" />
 
     <TextView
-        android:id="@+/NewOrderUnitPrice"
-        android:layout_width="200dp"
-        android:layout_columnWeight="1"
-        android:layout_row="1" />
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/pendingUnitQty"
+        android:layout_width="80dp"
+        android:layout_column="3"
+        android:layout_row="0"
+        android:layout_rowSpan="2"
+        android:textSize="26dp" />
 
 </GridLayout>
-<!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
+    <!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
