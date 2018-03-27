@@ -47,7 +47,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 public class FulfilOrdersActivity extends AppCompatActivity {
 
     //LIST OF ORDERS BEFORE LOCATION FILTER - For now is static list
-    private static List<Order> allUnassignedOrders;
+    private static List<Order> allUnassignedOrders = new ArrayList<>();
     private static List<String> unassignedRestaurantNames = new ArrayList<>();
 
     public BeaconManager beaconManager;
@@ -58,8 +58,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     static {
 
-        allUnassignedOrders = new ArrayList<>();
-        unassignedRestaurantNames = new ArrayList<>();
+
 
     }
 
@@ -90,36 +89,41 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 String selectedOrderTitle = parent.getItemAtPosition(position).toString();
                 Order selectedOrder = allUnassignedOrders.get(position);
 
-                AlertDialog alertDialog = new AlertDialog.Builder(FulfilOrdersActivity.this).create();
-                alertDialog.setTitle(selectedOrderTitle);
-                alertDialog.setMessage(selectedOrder.toString());
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                // Start Ranging after dismiss
-                                beaconManager.startRanging(region);
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Accept Job",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // ACCEPT JOB!!
-                                // Remove from list
-                                unassignedRestaurantNames.remove(position);
-                                allUnassignedOrders.remove(position);
-                                adapter.notifyDataSetChanged();
+                // Go to Order Details activity
+                Intent it = new Intent(FulfilOrdersActivity.this, OrderDetailsActivity.class);
+                it.putExtra("orderId", selectedOrder.getOrderID());
+                startActivity(it);
 
-                                // Send notification to customer with Certain UserID - temp send to self
-                                if (MyApplication.user != null && MyApplication.user.getIdentifier() != null) {
-                                    sendNotif(MyApplication.user.getIdentifier());
-                                }
-                                //Start ranging after done
-                                beaconManager.startRanging(region);
-                            }
-                        });
-                alertDialog.show();
-                alertDialog.setCanceledOnTouchOutside(false);
+
+//                AlertDialog alertDialog = new AlertDialog.Builder(FulfilOrdersActivity.this).create();
+//                alertDialog.setTitle(selectedOrderTitle);
+//                alertDialog.setMessage(selectedOrder.toString());
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                // Start Ranging after dismiss
+//                                beaconManager.startRanging(region);
+//                            }
+//                        });
+//                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Accept Job",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // ACCEPT JOB!! Remove from list
+//                                unassignedRestaurantNames.remove(position);
+//                                allUnassignedOrders.remove(position);
+//                                adapter.notifyDataSetChanged();
+//
+//                                // Send notification to customer with Certain UserID - temp send to self
+//                                if (MyApplication.user != null && MyApplication.user.getIdentifier() != null) {
+//                                    sendNotif(MyApplication.user.getIdentifier());
+//                                }
+//                                //Start ranging after done
+//                                beaconManager.startRanging(region);
+//                            }
+//                        });
+//                alertDialog.show();
+//                alertDialog.setCanceledOnTouchOutside(false);
 
 
             }
@@ -212,7 +216,8 @@ public class FulfilOrdersActivity extends AppCompatActivity {
             for (Beacon beacon : beacons) {
                 Log.e("BEACON DETECTED", beacon.getMacAddress().toString());
                 if(beacon.getMacAddress().equals(MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress())){
-                    // Add beacon to list of beacons to display
+                    // Only show orders matching macadd
+                    allUnassignedOrders.add(o);
                 }
             }
         }
