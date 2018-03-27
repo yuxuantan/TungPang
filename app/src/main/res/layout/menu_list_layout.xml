@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mylistitem"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightSmall"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/mylistitem"
+    android:columnCount="3"
+    android:padding="20dp">
 
-    android:gravity="center_vertical"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:textColor="@color/colorPrimary" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:text="Food Name:" />
 
+    <TextView
+        android:id="@+/NewOrderfoodName"
+        android:layout_width="200dp"
+        android:layout_column="1"
+        android:layout_row="0" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:text="Unit Price:" />
+
+    <TextView
+        android:id="@+/NewOrderUnitPrice"
+        android:layout_width="200dp"
+        android:layout_column="1"
+        android:layout_row="1" />
+
+    <TextView
+        android:id="@+/NewOrderUnitPrice"
+        android:layout_width="200dp"
+        android:layout_columnWeight="1"
+        android:layout_row="1" />
+
+</GridLayout>
 <!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
