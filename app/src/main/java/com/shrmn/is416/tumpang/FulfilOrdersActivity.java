@@ -48,7 +48,9 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     //LIST OF ORDERS BEFORE LOCATION FILTER - For now is static list
     private static List<Order> allUnassignedOrders = new ArrayList<>();
-    private static List<String> unassignedRestaurantNames = new ArrayList<>();
+
+    private static List<Order> allUnassignedOrdersInRange = new ArrayList<>();
+    private static List<String> unassignedRestaurantNamesInRange = new ArrayList<>();
 
     public BeaconManager beaconManager;
     public BeaconRegion region;
@@ -76,7 +78,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 this,//context
                 R.layout.mylistlayout,//custom_layout
                 R.id.mylistitem,// referring the widget (TextView) where the items to be displayed
-                unassignedRestaurantNames//items
+                unassignedRestaurantNamesInRange//items
         );
 
         lv.setAdapter(adapter);
@@ -157,6 +159,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         region = new BeaconRegion("ranged region",
                 UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
 
+        // Every second will get called if there is beacons nearby. startDutyCyclingCd will pause it for 10 secs
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
             public void onBeaconsDiscovered(BeaconRegion region, List<Beacon> list) {
@@ -212,21 +215,26 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
         //CONNECT TO DB, pull list of unassigned and set here!! unassignedOrders = ??, Filter again
         retrieveOrders();
+        allUnassignedOrdersInRange.clear();
         for (Order o : allUnassignedOrders) {
             for (Beacon beacon : beacons) {
                 Log.e("BEACON DETECTED", beacon.getMacAddress().toString());
-                if(beacon.getMacAddress().equals(MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress())){
-                    // Only show orders matching macadd
-                    allUnassignedOrders.add(o);
+                Log.e("Current Order Beacon ID", "["+MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress()+"]");
+                if(beacon.getMacAddress().toString().equals("["+MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress()+"]")){
+//                    // Only show orders matching macadd
+                    allUnassignedOrdersInRange.add(o);
+                    Log.e("Order added", o.toString());
                 }
             }
         }
-        unassignedRestaurantNames.clear();
+        unassignedRestaurantNamesInRange.clear();
 
-        for (Order o : allUnassignedOrders) {
-            unassignedRestaurantNames.add(o.getLocationName());
+        for (Order o : allUnassignedOrdersInRange) {
+            unassignedRestaurantNamesInRange.add(o.getLocationName());
         }
-        Log.d("Refreshed", unassignedRestaurantNames.toString());
+        Log.d("Restaurant Names", unassignedRestaurantNamesInRange.toString());
+
+
 
     }
 
@@ -278,92 +286,88 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            allUnassignedOrders.clear();
+
+                            // For each entry ie. order
                             for (DocumentSnapshot document : task.getResult()) {
-//                                String locationID = document.getId();
+                                String orderId = document.getId();
                                 Map<String, Object> data = document.getData();
 
-//                                ArrayList<Drink> drinks = new ArrayList<>();
-//                                ArrayList<Food> food = new ArrayList<>();
-//                                ArrayList<MenuItem> items = new ArrayList<>();
-
 //                                Log.e(TAG, document.getId() + " => " + data);
-                                allUnassignedOrders.clear();
+
                                 // ArrayList of HashMaps, 1 for each item. Key(item and qty)
-                                ArrayList<Map<String, String>> orderMenuItemsObj = (ArrayList<Map<String, String>>) data.get("menuItems");
+//                                ArrayList<Map<String, String>> dbOrderMenuItems = (ArrayList<Map<String, String>>) data.get("menuItems");
+                                ArrayList<Object> dbOrderMenuItems = (ArrayList<Object>)data.get("menuItems");
+                                String locID = (String) data.get("locationID").toString().split("/")[2];
+//                                Log.e("locID", locID);
+                                Location location = null;
+                                String locationName = "";
+                                if(locID!=null){
+                                    location = MyApplication.locations.get(locID);
+                                    if(location!=null)
+                                        locationName = location.getName();
+                                }
+
+
 
                                 // Menu Item includes more details of the menu like name. what is stored in DB is links
                                 /**Can we push list of drinks into static list?**/
                                 HashMap<MenuItem, Integer> menuItems = new HashMap<>();
-                                for (Map<String, String> menuItem : orderMenuItemsObj) {
 
+
+                                for (Object dbMenuItem : dbOrderMenuItems) {
+                                    long qty = ((Map<String, Long>)dbMenuItem).get("qty");
                                     // Change item string reference (menuItem.get("item")) to locations table into a menu item object, and put in menuitems hashmap
-                                    String[] references = menuItem.get("item").split("/");
-                                    Log.e("ref", Arrays.toString(references));
-
-                                    String locationID = references[1];
-
+                                    String[] references = ((Map<String, String>)dbMenuItem).get("item").split("/");
+//                                    Log.e("ref", Arrays.toString(references));
+                                    // eg. get "Food[0]" --> (Food , 0)
                                     String tmp[] = references[2].split("\\[|\\]");
-                                    Log.d(TAG, "onComplete: " + Arrays.toString(tmp));
-
-                                    Location location = MyApplication.locations.get(locationID);
+//                                    String type = tmp[0];
+//                                    Log.e("Location", location.toString());
                                     MenuItem item = null;
-                                    Log.e("Location ID:", location.getMenu().getFood()+"");
-                                    if(tmp[0].equals("food")) {
-                                        //Log.e("Location ID:", location.getMenu().getFood().toString());
-//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
-                                    } else if(tmp[0].equals("drinks")) {
-                                        //Log.e("Location ID:", location.getMenu().getFood().toString());
-//                                        item = location.getMenu().getDrinks().get(Integer.parseInt(tmp[1]));
-//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
-                                    } else if(tmp[0].equals("drinks")) {
-//                                        item = location.getMenu().getFood().get(Integer.parseInt(tmp[1]));
-
-                                    }
-
-//                                    menuItems.put(item, Integer.parseInt(menuItem.get("qty")));
+                                    if(location!=null)
+                                        item = location.getMenu().getItems().get(Integer.parseInt(tmp[1]));
+//                                        Log.e("qty" , qty+"");
+                                    menuItems.put(item, (int)qty);
                                 }
 
-//                                        menuItems.put(,menuItem);
-//                                    }
-//                                    Log.e("Order: ", object.toString());
-//                                    allOrders.add(new Order(object.));
+                                // Actually this will never happen, since if filter order = unassigned, est time delivery WILL be null
+                                if(data.get("estimatedTimeOfDelivery")!=null && data.get("deliveryManUserID")==null){
+                                    allUnassignedOrders.add(
+                                            new Order(
+                                                    orderId,
+                                                    locID,
+                                                    locationName,
+                                                    Double.parseDouble(data.get("tipAmount").toString()),
+                                                    Long.parseLong(data.get("estimatedTimeOfDelivery").toString()),
+                                                    data.get("deliveryManUserID").toString(),
+                                                    data.get("customerUserID").toString(),
+                                                    menuItems,
+                                                    data.get("deliveryLocation").toString(),
+                                                    Integer.parseInt(data.get("status").toString())
+                                            )
+                                    );
+                                }
+                                else{
+                                    allUnassignedOrders.add(
+                                            new Order(
+                                                    orderId,
+                                                    locID,
+                                                    locationName,
+                                                    Double.parseDouble(data.get("tipAmount").toString()),
+                                                    0,
+                                                    "",
+                                                    data.get("customerUserID").toString(),
+                                                    menuItems,
+                                                    data.get("deliveryLocation").toString(),
+                                                    Integer.parseInt(data.get("status").toString())
+                                            )
+                                    );
+                                }
 
-//                                Map<String, Object> menuObj = (Map<String, Object>) data.get("menu");
-//                                ArrayList<Map<String, Object>> foodObj = (ArrayList<Map<String, Object>>) menuObj.get("food");
-//                                ArrayList<Map<String, Object>> drinksObj = (ArrayList<Map<String, Object>>) menuObj.get("drinks");
-//
-//                                String path = document.getReference().getPath();
-//
-//                                for (int i = 0; i < foodObj.size(); i++) {
-//                                    Map<String, Object> foodItem = foodObj.get(i);
-//                                    food.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
-//                                    items.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
-//                                }
-//
-//                                for (int i = 0; i < drinksObj.size(); i++) {
-//                                    Map<String, Object> drinkItem = drinksObj.get(i);
-//                                    drinks.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
-//                                    items.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
-//                                }
-//
-//
-//                                MyApplication.locations.put(locationID,
-//                                        new Location(
-//                                                locationID,
-//                                                data.get("name").toString(),
-//                                                data.get("address").toString(),
-//                                                123,
-//                                                456,
-//                                                new Menu(items)
-//                                        )
-//                                );
-//                                locationIDs.add(locationID);
-//                                locationNames.add(data.get("name").toString());
                             }
-//                            Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
-//                            setAdapterContents();
                         } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 }

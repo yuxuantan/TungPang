@@ -14,7 +14,7 @@
         android:text="Food Name:" />
 
     <TextView
-        android:id="@+/NewOrderfoodName"
+        android:id="@+id/NewOrderfoodName"
         android:layout_width="200dp"
         android:layout_column="1"
         android:layout_row="0" />
@@ -25,17 +25,17 @@
         android:layout_row="1"
         android:text="Unit Price:" />
 
-    <TextView
-        android:id="@+/NewOrderUnitPrice"
-        android:layout_width="200dp"
-        android:layout_column="1"
-        android:layout_row="1" />
+    <!--<TextView-->
+        <!--android:id="@+id/NewOrderUnitPrice"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_column="1"-->
+        <!--android:layout_row="1" />-->
 
-    <TextView
-        android:id="@+/NewOrderUnitPrice"
-        android:layout_width="200dp"
-        android:layout_columnWeight="1"
-        android:layout_row="1" />
+    <!--<TextView-->
+        <!--android:id="@+id/NewOrderUnitPrice"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_columnWeight="1"-->
+        <!--android:layout_row="1" />-->
 
 </GridLayout>
 <!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
