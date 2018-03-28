@@ -16,11 +16,13 @@
         android:layout_height="wrap_content"
         android:text="Back"
         android:onClick="finishActivity"/>
+
     <TextView
+        android:id="@+id/details_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="ORDER1   Qty 1\nORDER2 Qty 2\nORDER3 Qty3"/>
+        android:text="ORDER1   Qty 1\nORDER2 Qty 2\nORDER3 Qty3" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

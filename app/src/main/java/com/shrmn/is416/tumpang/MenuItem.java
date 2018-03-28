@@ -1,10 +1,12 @@
 package com.shrmn.is416.tumpang;
 
+import java.io.Serializable;
+
 /**
  * Created by man on 19/3/18.
  */
 
-public abstract class MenuItem {
+public abstract class MenuItem implements Serializable{
     private String name;
     private double unitPrice;
     private int quantity;

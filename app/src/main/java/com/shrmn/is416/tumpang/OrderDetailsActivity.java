@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,6 +46,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 Log.e("OrderDetailsActivity", order.toString());
             }
         }*/
+        TextView detailsTv = (TextView) findViewById(R.id.details_tv);
+        detailsTv.setText(order.toString());
 
     }
 
