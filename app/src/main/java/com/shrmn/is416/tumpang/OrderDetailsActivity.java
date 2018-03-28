@@ -34,10 +34,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_details);
 
         // Get order ID
-        String orderId = getIntent().getStringExtra("orderId");
+//        String orderId = getIntent().getStringExtra("orderId");
+        order = (Order)getIntent().getSerializableExtra("selectedOrder");
         // Query db for this orderId
 //        retrieveOrder(orderId);
-        Log.d("SelectedOrderId", orderId);
+        Log.d("SelectedOrder", order.toString());
         /*Use this way of retrieving order if retrieveOrder(orderId) doesn't work
         for(Order order: FulfilOrdersActivity.allUnassignedOrders) {
             if (order.getOrderID().toString().equals(orderId)) {
@@ -100,26 +101,26 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     }
     //used to retrieve a single order, loop the ArrayList of unAssignedOrders if this does not work
-    private void retrieveOrder(String orderId) {
-
-        db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("orders").document(orderId);
-
-        docRef.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document != null && document.exists()) {
-                                order = document.toObject(Order.class);
-                                Log.d("", "Order loaded: " + order);
-                            } else {
-                                Log.d("OrderDetailsActivity", "No order found");
-                            }
-                        }
-                    }
-                });
-    }
+//    private void retrieveOrder(String orderId) {
+//
+//        db = FirebaseFirestore.getInstance();
+//        DocumentReference docRef = db.collection("orders").document(orderId);
+//
+//        docRef.get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//                            if (document != null && document.exists()) {
+//                                order = document.toObject(Order.class);
+//                                Log.d("", "Order loaded: " + order);
+//                            } else {
+//                                Log.d("OrderDetailsActivity", "No order found");
+//                            }
+//                        }
+//                    }
+//                });
+//    }
 
 }
