@@ -36,8 +36,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         // Get order ID
         String orderId = getIntent().getStringExtra("orderId");
         // Query db for this orderId
-        retrieveOrder(orderId);
-        Log.d("SelectedOrder", order.toString());
+//        retrieveOrder(orderId);
+        Log.d("SelectedOrderId", orderId);
         /*Use this way of retrieving order if retrieveOrder(orderId) doesn't work
         for(Order order: FulfilOrdersActivity.allUnassignedOrders) {
             if (order.getOrderID().toString().equals(orderId)) {
