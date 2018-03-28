@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.SetOptions;
 
 public class FirstRunDialog extends DialogFragment {
     private static final String TAG = "FRDialog";
+    private static Button loginButton;
     User user = MyApplication.user;
 
     @Override
@@ -27,27 +29,25 @@ public class FirstRunDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_firstrun, null);
-        final EditText inputTelegramUsername = dialogView.findViewById(R.id.input_telegram_username);
-        final EditText inputName = dialogView.findViewById(R.id.input_name);
+
+        loginButton = dialogView.findViewById(R.id.login_button);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(dialogView)
                 // Add action buttons
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        user.setName(inputName.getText().toString());
-                        user.setTelegramUsername(inputTelegramUsername.getText().toString());
-
-                        Log.d(TAG, "Confirmed first run dialog. Confirmed credentials: telegram_username=" + user.getTelegramUsername() + "; name=" + user.getName());
-                        user.save();
-//                        mListener.onDialogPositiveClick(FirstRunDialog.this);
+                        Log.d(TAG, "onClick: Positive. Should update user in Firestore");
+                        mListener.onDialogPositiveClick(FirstRunDialog.this);
                     }
                 })
-                .setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        FirstRunDialog.this.getDialog().cancel();
+//                        FirstRunDialog.this.getDialog().cancel();
+                        Log.d(TAG, "onClick: Negative. Should re-open login intent");
                         mListener.onDialogNegativeClick(FirstRunDialog.this);
                     }
                 });
@@ -58,7 +58,7 @@ public class FirstRunDialog extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface FirstRunDialogListener {
-//        public void onDialogPositiveClick(DialogFragment dialog);
+        void onDialogPositiveClick(DialogFragment dialog);
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -71,7 +71,7 @@ public class FirstRunDialog extends DialogFragment {
         super.onAttach(context);
 
         Activity activity;
-        if(context instanceof Activity) {
+        if (context instanceof Activity) {
             activity = (Activity) context;
             // Verify that the host activity implements the callback interface
             try {

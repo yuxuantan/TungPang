@@ -10,6 +10,8 @@ import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class User {
 
@@ -22,27 +24,30 @@ public class User {
     private String deviceModel;
     private String deviceManufacturer;
     private String firebaseInstanceID;
+    private Map<String, Object> telegram;
 
     @ServerTimestamp
     private Date serverTimestamp;
 
     // An empty constructor is required for Firestore's document.toObject(User.class) method
-    public User() {}
+    public User() {
+    }
 
-    public User(String identifier, String telegramUsername, boolean isAdmin, String name, long createdAt, String firebaseInstanceID) {
+    public User(String identifier, String telegramUsername, boolean isAdmin, String name, long createdAt, String firebaseInstanceID, Map<String, Object> telegram) {
         this.identifier = identifier;
         this.telegramUsername = telegramUsername;
         this.isAdmin = isAdmin;
         this.name = name;
         this.createdAt = createdAt;
         this.firebaseInstanceID = firebaseInstanceID;
+        this.telegram = telegram;
 
         deviceModel = Build.MODEL;
         deviceManufacturer = Build.MANUFACTURER;
     }
 
     public User(String identifier, String telegramUsername, boolean isAdmin, String name) {
-        this(identifier, telegramUsername, isAdmin, name, System.currentTimeMillis(), null);
+        this(identifier, telegramUsername, isAdmin, name, System.currentTimeMillis(), null, new HashMap<String, Object>());
     }
 
     public User(String identifier) {
@@ -85,12 +90,20 @@ public class User {
         return serverTimestamp;
     }
 
+    public Map<String, Object> getTelegram() {
+        return telegram;
+    }
+
+    public void setTelegram(Map<String, Object> telegram) {
+        this.telegram = telegram;
+    }
+
     public String telegramLink() {
         return telegramUsername == null ? null : "https://t.me/" + telegramUsername;
     }
 
     public String displayName() {
-        if(name != null) {
+        if (name != null) {
             return name;
         } else if (telegramUsername != null) {
             return "@" + telegramUsername;
@@ -99,11 +112,11 @@ public class User {
     }
 
     public void setTelegramUsername(String telegramUsername) {
-        if(telegramUsername != null && !telegramUsername.isEmpty()) {
+        if (telegramUsername != null && !telegramUsername.isEmpty()) {
             // Strip whitespace
             telegramUsername = telegramUsername.trim();
             // Remove @ from first character
-            if(telegramUsername.charAt(0) == '@') {
+            if (telegramUsername.charAt(0) == '@') {
                 telegramUsername = telegramUsername.substring(1);
             }
             this.telegramUsername = telegramUsername;
@@ -113,7 +126,7 @@ public class User {
 
     public void setName(String name) {
         // Trim whitespace off name
-        if(name != null && !name.isEmpty()) {
+        if (name != null && !name.isEmpty()) {
             this.name = name.trim();
         }
     }
@@ -121,7 +134,6 @@ public class User {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
-
 
 
     @Override
@@ -149,6 +161,8 @@ public class User {
                 ", createdAt=" + createdAt +
                 ", deviceModel='" + deviceModel + '\'' +
                 ", deviceManufacturer='" + deviceManufacturer + '\'' +
+                ", firebaseInstanceID='" + firebaseInstanceID + '\'' +
+                ", telegram=" + telegram +
                 ", serverTimestamp=" + serverTimestamp +
                 '}';
     }

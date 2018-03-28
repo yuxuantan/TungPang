@@ -38,29 +38,20 @@
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="Thank you for installing our app!\nPlease fill in the following information." />
+        android:text="Thank you for installing our app!\nWe require you to login using your Telegram account in order to enable messaging." />
 
-    <EditText
-        android:id="@+id/input_telegram_username"
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
-        android:hint="Telegram Username"
-        android:inputType="textNoSuggestions" />
+        android:text="Login with Telegram"
+        android:id="@+id/login_button"
+        android:onClick="onClickLoginButton"
+        android:layout_marginHorizontal="16dp"
+        android:background="@color/colorTelegram"
+        android:textColor="@color/colorButtonText"
+        android:textSize="16dp"
+        />
 
-    <EditText
-        android:id="@+id/input_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
-        android:hint="Your Name"
-        android:inputType="textNoSuggestions" />
 
     <TextView
         android:layout_width="match_parent"
@@ -68,6 +59,6 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:gravity="center"
-        android:text="This information is only released upon purchase completion, to facilitate the meetup process!" />
+        android:text="Your Telegram username is only released upon purchase completion, to facilitate the meetup process!" />
 
 </LinearLayout>

@@ -7,5 +7,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorTextHeading">#000000</color>
     <color name="colorYellow">#FFFFBB33</color>
+    <color name="colorTelegram">#0088cc</color>
     <color name="ic_launcher_background">#FF6161</color>
 </resources>

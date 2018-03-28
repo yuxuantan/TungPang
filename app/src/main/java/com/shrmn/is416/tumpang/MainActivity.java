@@ -1,14 +1,20 @@
 package com.shrmn.is416.tumpang;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -27,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -37,6 +44,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
 
+import static com.shrmn.is416.tumpang.MyApplication.firstRunVariable;
 import static com.shrmn.is416.tumpang.MyApplication.user;
 
 public class MainActivity extends AppCompatActivity implements FirstRunDialog.FirstRunDialogListener {
@@ -45,51 +53,34 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
     private TextView labelWelcome;
 
     public void showFirstRunDialog() {
-//        DialogFragment dialog = new FirstRunDialog();
-//        dialog.show(getSupportFragmentManager(), "FirstRunDialog");
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Tumpang Login");
+        DialogFragment dialog = new FirstRunDialog();
+        dialog.show(getSupportFragmentManager(), "FirstRunDialog");
 
-        final String loginUrl = "https://us-central1-tumpang-app.cloudfunctions.net/telegramLogin?doc_id=" + MyApplication.user.getIdentifier();
-        Log.d(TAG, "showFirstRunDialog: loginURL=" + loginUrl);
-        WebView wv = new WebView(this);
-        wv.getSettings().setJavaScriptEnabled(true);
-        wv.getSettings().setSupportZoom(true);
-        wv.getSettings().setBuiltInZoomControls(true);
-        wv.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
+        // Do not automatically open intent
+        // openLoginIntent();
+    }
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                view.loadUrl("javascript:HtmlViewer.showHTML" +
-                        "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
-            }
-        });
-        wv.loadUrl(loginUrl);
-        wv.addJavascriptInterface(new MyJavascriptInterface(this), "HtmlViewer");
-
-        alert.setView(wv);
-        alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-        alert.show();
+    public void openLoginIntent() {
+        Log.d(TAG, "openLoginIntent: Opening login URL " + MyApplication.loginUrl);
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(MyApplication.loginUrl));
+        startActivity(i);
     }
 
     public void setNegativeWelcomeText() {
-        labelWelcome.setText("We require your Telegram username for full app functionality.");
+        labelWelcome.setText("We require you to login to Telegram for full app functionality.");
         labelWelcome.setTypeface(labelWelcome.getTypeface(), Typeface.ITALIC);
     }
 
     @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Log.d(TAG, "onDialogPositiveClick: Refreshing user from Firestore");
+        MyApplication.getUserFromFirestore();
+    }
+
+    @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
+        Log.d(TAG, "onDialogNegativeClick: User cancelled");
         setNegativeWelcomeText();
     }
 
@@ -98,37 +89,36 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//
         labelWelcome = findViewById(R.id.label_welcome);
 
-        MyApplication.firstRunVariable.setVariableChangeListener(new VariableChangeListener() {
+        firstRunVariable.setVariableChangeListener(new VariableChangeListener() {
             @Override
             public void onVariableChanged(Object... variableThatHasChanged) {
                 boolean isFirstRun = (Boolean) variableThatHasChanged[0];
-                if(isFirstRun) {
+                if (isFirstRun) {
                     Log.d(TAG, "onVariableChanged: Detected first-run, presenting FirstRunDialog");
                     showFirstRunDialog();
                 } else {
 
                     String displayName = user.displayName();
-                    if(displayName == null) {
+                    if (displayName == null) {
                         setNegativeWelcomeText();
+                        showFirstRunDialog();
                     } else {
                         labelWelcome.setText("Welcome, " + displayName + "!");
                     }
                     Log.d(TAG, "onVariableChanged: Not a first run.");
 
 
-                    // Subscibe to user's identifier as topic name
+                    // Subscribe to user's identifier as topic name
                     String identifier = user.getIdentifier();
-                    if(identifier!=null){
+                    if (identifier != null) {
                         FirebaseMessaging.getInstance().subscribeToTopic(identifier);
                         Log.e("Subscribed to topic:", identifier);
                     }
                 }
             }
         });
-
 
     }
 
@@ -142,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
         startActivity(ptg);
     }
 
-
-
-
+    public void onClickLoginButton(View view) {
+        Log.d(TAG, "onClickLoginButton: Pressed.");
+        openLoginIntent();
+    }
 }

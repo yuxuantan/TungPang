@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -35,17 +36,21 @@ import java.util.UUID;
 
 public class MyApplication extends Application {
 
-    /** User-set constants **/
+    /**
+     * User-set constants
+     **/
     // Debugging tag
     private static final String TAG = "app";
     // Firestore collection for Users
     public static final String USERS_COLLECTION = "users";
     // Whether to show first-run dialog as long as no telegram_username is given
-    private static final boolean TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN = true;
+    public static final boolean TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN = true;
     // SharedPreferences key to store installation Unique ID
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
-    /** Runtime-set variables **/
+    /**
+     * Runtime-set variables
+     **/
     // Holds the Estimote Beacon Manager
     public static BeaconManager beaconManager;
     // Holds the uniqueID retrieved from SharedPreferences (or created on first-run)
@@ -62,6 +67,7 @@ public class MyApplication extends Application {
     public static ArrayList<String> locationNames;
     // Holds the currently being-built order item
     public static Order pendingOrder;
+    public static String loginUrl;
 
 //    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
@@ -78,6 +84,8 @@ public class MyApplication extends Application {
                 editor.commit();
             }
         }
+
+        loginUrl = "https://us-central1-tumpang-app.cloudfunctions.net/telegramLogin?doc_id=" + uniqueID;
         return uniqueID;
     }
 
@@ -97,9 +105,9 @@ public class MyApplication extends Application {
         initialiseBeaconSubsystem();
         // Also loads the current User's record into this.User
         initialiseFirebaseDatabase();
+        getUserFromFirestore();
         retrieveLocations();
 //        retrieveBeacons();
-
 
 
     }
@@ -138,6 +146,7 @@ public class MyApplication extends Application {
                 Log.d("Beacons", beacons.toString());
 
             }
+
             @Override
             public void onExitedRegion(BeaconRegion region) {
                 showNotification(
@@ -160,6 +169,9 @@ public class MyApplication extends Application {
 
     private void initialiseFirebaseDatabase() {
         db = FirebaseFirestore.getInstance();
+    }
+
+    public static void getUserFromFirestore() {
         DocumentReference docRef = db.collection(USERS_COLLECTION).document(uniqueID);
 
         docRef.get()
@@ -173,7 +185,7 @@ public class MyApplication extends Application {
                                 Log.d(TAG, "Existing user; Loaded: " + user);
 
                                 // Force a token retrieval if there is no token currently associated with this user
-                                if(user.getFirebaseInstanceID() == null) {
+                                if (user.getFirebaseInstanceID() == null) {
                                     String token = FirebaseInstanceId.getInstance().getToken();
                                     user.setFirebaseInstanceID(token);
                                     Log.d(TAG, "onComplete: Token Retrieved = " + token);
@@ -189,7 +201,7 @@ public class MyApplication extends Application {
                 });
     }
 
-    private void addUserToDB() {
+    private static void addUserToDB() {
         db.collection(USERS_COLLECTION).document(uniqueID)
                 .set(new User(uniqueID))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -206,7 +218,7 @@ public class MyApplication extends Application {
                 });
     }
 
-//    public static void retrieveBeacons(){
+    //    public static void retrieveBeacons(){
 //        MyApplication.db.collection("beacons").get().addOnCompleteListener(
 //                new OnCompleteListener<QuerySnapshot>() {
 //                    @Override
@@ -225,7 +237,7 @@ public class MyApplication extends Application {
 //        );
 //    }
     public static void retrieveLocations() {
-        if(!locations.isEmpty()) {
+        if (!locations.isEmpty()) {
             return;
         }
 
