@@ -32,8 +32,6 @@ public abstract class MenuItem {
     public abstract void setName(String name);
     public abstract double getUnitPrice();
     public abstract void setUnitPrice(double price);
-    public abstract int getQuantity();
-    public abstract void setQuantity(int quantity);
 
     @Override
     public boolean equals(Object o) {
@@ -55,6 +53,14 @@ public abstract class MenuItem {
         return "MenuItem{" +
                 "path='" + path + '\'' +
                 '}';
+    }
+
+    public int getQuantity(){
+        return this.quantity;
+    }
+
+    public void setQuantity(int quantity){
+        this.quantity = quantity;
     }
 }
 

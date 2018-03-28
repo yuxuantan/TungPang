@@ -77,7 +77,7 @@ public class OrderConfirmationDialog extends DialogFragment {
         orderQty.setText("Order Total Quantity: " +totalOrderQuantity+"");
 
         TextView orderBill = dialogView.findViewById(R.id.order_bill);
-        orderBill.setText("Order Total BillAmount: $ " + strOrderBill);
+        orderBill.setText("Order BillAmount: $ " + strOrderBill);
 
         TextView totalBill = dialogView.findViewById(R.id.total_orderbill);
         totalBill.setText("Order Total BillAmount: $ " + strTotalOrderBill);

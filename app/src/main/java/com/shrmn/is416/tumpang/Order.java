@@ -174,16 +174,16 @@ public class Order implements Serializable {
         return map;
     }
 
-    public HashMap<MenuItem,Integer> getMenuItems() {
-        return menuItems;
-    }
-
     public List<MenuItem> getPendingMenuItems() {
         return pendingMenuItems;
     }
 
     public void setPendingMenuItems(List<MenuItem> pendingMenuItems) {
         this.pendingMenuItems = pendingMenuItems;
+    }
+
+    public HashMap<MenuItem,Integer> getMenuItems() {
+        return menuItems;
     }
 }
 
