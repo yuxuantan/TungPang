@@ -1,5 +1,6 @@
 package com.shrmn.is416.tumpang;
 
+import android.app.Application;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +19,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shrmn.is416.tumpang.utilities.FCMRestClient;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class OrderDetailsActivity extends AppCompatActivity {
 
@@ -56,22 +67,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
 
-    public void deliveredOrder(View view){
-        updateDBStatus(3);
-        // Go back to fulfilAcceptedOrdersActivity
-        Intent intent = new Intent(this, FulfilAcceptedOrdersActivity.class);
-        startActivity(intent);
-        finish();
-    }
-    public void purchasedOrder(View view){
-        updateDBStatus(2);
-        // Go back to fulfilAcceptedOrdersActivity
-        Intent intent = new Intent(this, FulfilAcceptedOrdersActivity.class);
-        startActivity(intent);
-        finish();
-    }
     public void acceptedOrder(View view) {
         updateDBStatus(1);
+        sendNotif(order.getCustomerUserID());
         // Go back to fulfilAcceptedOrdersActivity
         Intent intent = new Intent(this, FulfilAcceptedOrdersActivity.class);
         startActivity(intent);
@@ -80,7 +78,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     public void updateDBStatus(int updatedStatus){
         //data.put("ETA", ETA); Don't we need to ask user for their ETA as well?
-        MyApplication.db.collection("orders").document(order.getOrderID()).update("status", 1)
+        MyApplication.db.collection("orders").document(order.getOrderID()).update("status", 1, "deliveryManUserID", MyApplication.user.getIdentifier())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -117,5 +115,41 @@ public class OrderDetailsActivity extends AppCompatActivity {
 //                    }
 //                });
 //    }
+
+    private void sendNotif(String identifier) {
+        // Test HTTP Request
+        JsonObject finalObj = new JsonObject();
+        finalObj.addProperty("to", "/topics/" + identifier);
+
+        JsonObject msgObj = new JsonObject();
+
+        String displayMsg = "Order details: ";
+        for(MenuItem item: order.getMenuItems().keySet()){
+            displayMsg+=(item.getName()+", qty: "+order.getMenuItems().get(item)+"\n");
+        }
+        msgObj.addProperty("message", displayMsg);
+        finalObj.add("data", msgObj);
+
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(finalObj.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        FCMRestClient client = new FCMRestClient();
+        client.post(OrderDetailsActivity.this, "", entity, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.e("status", "Success:");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.e("status", "Failure:" + error);
+            }
+        });
+    }
 
 }

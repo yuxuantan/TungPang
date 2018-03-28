@@ -50,12 +50,12 @@ public abstract class MenuItem implements Serializable{
         return path.hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "MenuItem{" +
-                "path='" + path + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "MenuItem{" +
+//                "path='" + path + '\'' +
+//                '}';
+//    }
 
     public int getQuantity(){
         return this.quantity;

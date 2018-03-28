@@ -179,37 +179,6 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
     }
 
-    private void sendNotif(String identifier) {
-        // Test HTTP Request
-        JsonObject finalObj = new JsonObject();
-        finalObj.addProperty("to", "/topics/" + identifier);
-
-        JsonObject msgObj = new JsonObject();
-        msgObj.addProperty("message", "This is a Firebase Cloud Messaging Topic Message!");
-        finalObj.add("data", msgObj);
-
-        StringEntity entity = null;
-        try {
-            entity = new StringEntity(finalObj.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-
-        FCMRestClient client = new FCMRestClient();
-        client.post(FulfilOrdersActivity.this, "", entity, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.e("status", "Success:");
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("status", "Failure:" + error);
-            }
-        });
-    }
-
 
     private void refreshList(List<Beacon> beacons) {
 

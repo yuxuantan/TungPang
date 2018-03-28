@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
