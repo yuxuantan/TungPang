@@ -7,11 +7,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
@@ -104,13 +102,11 @@ public class MyApplication extends Application {
 
         // Abstracted these parts into subroutines
         initialiseBeaconSubsystem();
-        // Also loads the current User's record into this.User
-        initialiseFirebaseDatabase();
+        // Prepare Firebase Firestore Database
+        initialiseFirestore();
+        // Load the current User's record into this.User
         getUserFromFirestore();
         retrieveLocations();
-//        retrieveBeacons();
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -144,8 +140,7 @@ public class MyApplication extends Application {
                 showNotification(
                         "ENTERED!",
                         "Just entered the range of a beacon");
-                Log.d("Beacons", beacons.toString());
-
+                Log.d(TAG, "Beacons: " + beacons.toString());
             }
 
             @Override
@@ -163,16 +158,16 @@ public class MyApplication extends Application {
                 beaconManager.startMonitoring(new BeaconRegion(
                         "monitored region",
                         UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null));
-
             }
         });
     }
 
-    private void initialiseFirebaseDatabase() {
+    private void initialiseFirestore() {
         db = FirebaseFirestore.getInstance();
     }
 
     public static void getUserFromFirestore() {
+        Log.d(TAG, "getUserFromFirestore: Reading User from Firestore");
         DocumentReference docRef = db.collection(USERS_COLLECTION).document(uniqueID);
 
         docRef.get()
@@ -193,7 +188,7 @@ public class MyApplication extends Application {
                                     user.save();
                                 }
                             } else {
-                                Log.d(TAG, "No User document with ID " + uniqueID + "; Adding to database.");
+                                Log.d(TAG, "User - No User document with ID " + uniqueID + "; Adding to database.");
                                 addUserToDB();
                             }
                             firstRunVariable.setFirstRun(user == null || (user.getTelegramUsername() == null && TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN));
@@ -208,35 +203,17 @@ public class MyApplication extends Application {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Log.d(TAG, "User - DocumentSnapshot successfully written!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
+                        Log.w(TAG, "User - Error writing document", e);
                     }
                 });
     }
 
-    //    public static void retrieveBeacons(){
-//        MyApplication.db.collection("beacons").get().addOnCompleteListener(
-//                new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            for(DocumentSnapshot document : task.getResult()){
-//                                String beaconMacAdd = document.getId();
-//                                Map<String, Object> data = document.getData();
-//
-//                                Log.e("beacon", document.getId() + " => " + data);
-//
-//                            }
-//                        }
-//                    }
-//                }
-//        );
-//    }
     public static void retrieveLocations() {
         if (!locations.isEmpty()) {
             return;
@@ -250,8 +227,6 @@ public class MyApplication extends Application {
                             for (DocumentSnapshot document : task.getResult()) {
                                 String locationID = document.getId();
                                 Map<String, Object> data = document.getData();
-//                                ArrayList<Drink> drinks = new ArrayList<>();
-//                                ArrayList<Food> food = new ArrayList<>();
                                 ArrayList<MenuItem> items = new ArrayList<>();
 
                                 Log.d(TAG, document.getId() + " => " + data);
@@ -264,16 +239,13 @@ public class MyApplication extends Application {
 
                                 for (int i = 0; i < foodObj.size(); i++) {
                                     Map<String, Object> foodItem = foodObj.get(i);
-//                                    food.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
                                     items.add(new Food(path + "/food[" + i + "]", foodItem.get("name").toString(), Double.parseDouble(foodItem.get("unitPrice").toString())));
                                 }
 
                                 for (int i = 0; i < drinksObj.size(); i++) {
                                     Map<String, Object> drinkItem = drinksObj.get(i);
-//                                    drinks.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
                                     items.add(new Drink(path + "/drinks[" + i + "]", drinkItem.get("name").toString(), Double.parseDouble(drinkItem.get("unitPrice").toString())));
                                 }
-
 
                                 MyApplication.locations.put(locationID,
                                         new Location(
@@ -287,9 +259,8 @@ public class MyApplication extends Application {
                                 locationIDs.add(locationID);
                                 locationNames.add(data.get("name").toString());
                             }
-//                            Log.d(TAG, "retrieveLocations: " + MyApplication.locations.get("tea-party"));
                         } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.e(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 }

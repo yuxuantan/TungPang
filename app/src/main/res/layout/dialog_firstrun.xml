@@ -41,16 +41,16 @@
         android:text="Thank you for installing our app!\nWe require you to login using your Telegram account in order to enable messaging." />
 
     <Button
+        android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login with Telegram"
-        android:id="@+id/login_button"
-        android:onClick="onClickLoginButton"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
         android:background="@color/colorTelegram"
+        android:onClick="onClickLoginButton"
+        android:text="Login with Telegram"
         android:textColor="@color/colorButtonText"
-        android:textSize="16dp"
-        />
+        android:textSize="16dp" />
 
 
     <TextView

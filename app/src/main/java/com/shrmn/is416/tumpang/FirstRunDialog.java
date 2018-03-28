@@ -6,22 +6,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.SetOptions;
 
 public class FirstRunDialog extends DialogFragment {
     private static final String TAG = "FRDialog";
-    private static Button loginButton;
-    User user = MyApplication.user;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -29,8 +21,6 @@ public class FirstRunDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_firstrun, null);
-
-        loginButton = dialogView.findViewById(R.id.login_button);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -59,6 +49,7 @@ public class FirstRunDialog extends DialogFragment {
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface FirstRunDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
+
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
