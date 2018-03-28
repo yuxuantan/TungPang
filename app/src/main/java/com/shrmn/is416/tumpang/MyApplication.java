@@ -12,6 +12,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.service.BeaconManager;
 import com.estimote.coresdk.recognition.packets.Beacon;
@@ -24,8 +35,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.shrmn.is416.tumpang.utilities.FirstRunVariable;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +62,10 @@ public class MyApplication extends Application {
     public static final boolean TREAT_NULL_TELEGRAM_USERNAME_AS_FIRST_RUN = true;
     // SharedPreferences key to store installation Unique ID
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    // RemoteConfig key to store telegram api Bot key
+    private static final String TELEGRAM_API_KEY_KEY = "telegram_api_key";
+    // RemoteConfig cache expiration in seconds
+    private static final long REMOTE_CONFIG_CACHE_EXPIRATION = 3600;
 
     /**
      * Runtime-set variables
@@ -67,6 +87,10 @@ public class MyApplication extends Application {
     // Holds the currently being-built order item
     public static Order pendingOrder;
     public static String loginUrl;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    public static String telegramApiKey;
+
+    public static RequestQueue mRequestQueue;
 
 //    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
@@ -107,6 +131,48 @@ public class MyApplication extends Application {
         // Load the current User's record into this.User
         getUserFromFirestore();
         retrieveLocations();
+        initialiseRemoteConfig();
+        initialiseVolleyQueue();
+    }
+
+    private void initialiseVolleyQueue() {
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = new RequestQueue(cache, network);
+
+        // Start the queue
+        mRequestQueue.start();
+    }
+
+    private void initialiseRemoteConfig() {
+        Log.d(TAG, "initialiseRemoteConfig");
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        mFirebaseRemoteConfig.fetch(REMOTE_CONFIG_CACHE_EXPIRATION)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: mFirebaseRemoteConfig.fetch()");
+                            // After config data is successfully fetched, it must be activated before newly fetched
+                            // values are returned.
+                            mFirebaseRemoteConfig.activateFetched();
+                        } else {
+                            Log.e(TAG, "onComplete:mFirebaseRemoteConfig.fetch() ", task.getException());
+                        }
+                        telegramApiKey = mFirebaseRemoteConfig.getString(TELEGRAM_API_KEY_KEY);
+                        Log.d(TAG, "onComplete: Updated telegramApiKey = " + telegramApiKey);
+                    }
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -265,6 +331,90 @@ public class MyApplication extends Application {
                     }
                 }
         );
+    }
+
+    // Simple method to send notification to a given chat.
+    public static void sendTelegramNotification(String message, int chatId) {
+        Log.i(TAG, "sendTelegramNotification: " + chatId + ": " + message);
+        String url = "https://api.telegram.org/bot" + telegramApiKey + "/sendMessage";
+        try {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, new JSONObject("{\"chat_id\": " + chatId + ", \"parse_mode\": \"Markdown\", \"text\": " + escapeForJson(message, true) + "}"), new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG, "onResponse: " + response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Handle error
+                            Log.e(TAG, "onErrorResponse: Volley Error", error);
+                        }
+                    });
+            mRequestQueue.add(jsonObjectRequest);
+        } catch (JSONException e) {
+            Log.e(TAG, "sendTelegramNotification: Error in converting JSON", e);
+        }
+    }
+
+    // Overloaded method to send telegram notification to the CURRENT user via the chatbot
+    public static void sendTelegramNotification(String message) {
+        sendTelegramNotification(message, Integer.parseInt(user.getTelegram().get("id").toString()));
+    }
+
+    // Overloaded method to send telegram notification to a given User Identifier via the chatbot
+    public static void sendTelegramNotification(final String message, final String userIdentifier) {
+        DocumentReference docRef = db.collection(USERS_COLLECTION).document(userIdentifier);
+
+        docRef.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null && document.exists()) {
+                                User otherUser = document.toObject(User.class);
+                                Map<String, Object> telegram = user.getTelegram();
+
+                                // Force a token retrieval if there is no token currently associated with this user
+                                if (telegram == null || telegram.isEmpty()) {
+                                    Log.e(TAG, "sendTelegramNotification: Unable to send to " + userIdentifier + " as he/she has not logged into Telegram");
+                                } else {
+                                    sendTelegramNotification(message, Integer.parseInt(telegram.get("id").toString()));
+                                }
+                            } else {
+                                Log.e(TAG, "sendTelegramNotification: Unable to send to " + userIdentifier + " as he/she has not logged into Telegram");
+                            }
+                        }
+                    }
+                });
+    }
+
+    public static String escapeForJson( String value, boolean quote )
+    {
+        StringBuilder builder = new StringBuilder();
+        if( quote )
+            builder.append( "\"" );
+        for( char c : value.toCharArray() )
+        {
+            if( c == '\'' )
+                builder.append( "\\'" );
+            else if ( c == '\"' )
+                builder.append( "\\\"" );
+            else if( c == '\r' )
+                builder.append( "\\r" );
+            else if( c == '\n' )
+                builder.append( "\\n" );
+            else if( c == '\t' )
+                builder.append( "\\t" );
+            else if( c < 32 || c >= 127 )
+                builder.append( String.format( "\\u%04x", (int)c ) );
+            else
+                builder.append( c );
+        }
+        if( quote )
+            builder.append( "\"" );
+        return builder.toString();
     }
 
 }

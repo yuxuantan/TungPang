@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
                     Log.d(TAG, "onVariableChanged: Detected first-run, presenting FirstRunDialog");
                     showFirstRunDialog();
                 } else {
-
                     String displayName = user.displayName();
                     if (displayName == null) {
                         setNegativeWelcomeText();
