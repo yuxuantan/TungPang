@@ -1,7 +1,9 @@
 package com.shrmn.is416.tumpang;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,8 @@ import android.widget.ListView;
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.service.BeaconManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -65,8 +69,29 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 String selectedOrderTitle = parent.getItemAtPosition(position).toString();
-                Order selectedOrder = acceptedOrders.get(position);
-                goToOrderDetails();
+                final Order selectedOrder = acceptedOrders.get(position);
+
+
+                AlertDialog alertDialog = new AlertDialog.Builder(FulfilAcceptedOrdersActivity.this).create();
+                alertDialog.setTitle(selectedOrderTitle);
+                alertDialog.setMessage(selectedOrder.toString());
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Complete Job",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Update DB
+                                updateDBStatus(selectedOrder);
+
+                            }
+                        });
+                alertDialog.show();
+                alertDialog.setCanceledOnTouchOutside(false);
 
             }
         });
@@ -103,17 +128,16 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
 
                                 // ArrayList of HashMaps, 1 for each item. Key(item and qty)
 //                                ArrayList<Map<String, String>> dbOrderMenuItems = (ArrayList<Map<String, String>>) data.get("menuItems");
-                                ArrayList<Object> dbOrderMenuItems = (ArrayList<Object>)data.get("menuItems");
+                                ArrayList<Object> dbOrderMenuItems = (ArrayList<Object>) data.get("menuItems");
                                 String locID = (String) data.get("locationID").toString().split("/")[2];
 //                                Log.e("locID", locID);
                                 Location location = null;
                                 String locationName = "";
-                                if(locID!=null){
+                                if (locID != null) {
                                     location = MyApplication.locations.get(locID);
-                                    if(location!=null)
+                                    if (location != null)
                                         locationName = location.getName();
                                 }
-
 
 
                                 // Menu Item includes more details of the menu like name. what is stored in DB is links
@@ -122,23 +146,23 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
 
 
                                 for (Object dbMenuItem : dbOrderMenuItems) {
-                                    long qty = ((Map<String, Long>)dbMenuItem).get("qty");
+                                    long qty = ((Map<String, Long>) dbMenuItem).get("qty");
                                     // Change item string reference (menuItem.get("item")) to locations table into a menu item object, and put in menuitems hashmap
-                                    String[] references = ((Map<String, String>)dbMenuItem).get("item").split("/");
+                                    String[] references = ((Map<String, String>) dbMenuItem).get("item").split("/");
 //                                    Log.e("ref", Arrays.toString(references));
                                     // eg. get "Food[0]" --> (Food , 0)
                                     String tmp[] = references[2].split("\\[|\\]");
 //                                    String type = tmp[0];
 //                                    Log.e("Location", location.toString());
                                     MenuItem item = null;
-                                    if(location!=null)
+                                    if (location != null)
                                         item = location.getMenu().getItems().get(Integer.parseInt(tmp[1]));
 //                                        Log.e("qty" , qty+"");
-                                    menuItems.put(item, (int)qty);
+                                    menuItems.put(item, (int) qty);
                                 }
 
                                 // Actually this will never happen, since if filter order = unassigned, est time delivery WILL be null
-                                if(data.get("estimatedTimeOfDelivery")!=null && data.get("deliveryManUserID")==null){
+                                if (data.get("estimatedTimeOfDelivery") != null && data.get("deliveryManUserID") == null) {
                                     acceptedOrders.add(
                                             new Order(
                                                     orderId,
@@ -153,8 +177,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                                                     Integer.parseInt(data.get("status").toString())
                                             )
                                     );
-                                }
-                                else{
+                                } else {
                                     acceptedOrders.add(
                                             new Order(
                                                     orderId,
@@ -181,7 +204,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                         for (Order o : acceptedOrders) {
                             acceptedOrdersNames.add(o.getLocationName());
                         }
-                        Log.d(TAG, "onComplete: "+ acceptedOrdersNames);
+                        Log.d(TAG, "onComplete: " + acceptedOrdersNames);
                         Log.d(TAG, "onComplete: " + acceptedOrders);
                         adapter.notifyDataSetChanged();
 
@@ -189,4 +212,25 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                 }
         );
     }
+
+    public void updateDBStatus(Order order){
+        //data.put("ETA", ETA); Don't we need to ask user for their ETA as well?
+        MyApplication.db.collection("orders").document(order.getOrderID()).update("status", 2)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("OrderDetailsActivity", "Order updated.");
+                        retrieveOrders();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("OrderDetailsActivity", "Error updating Order", e);
+                    }
+                });
+
+
+    }
 }
+
