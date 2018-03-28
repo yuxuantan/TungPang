@@ -48,8 +48,10 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
 //        DialogFragment dialog = new FirstRunDialog();
 //        dialog.show(getSupportFragmentManager(), "FirstRunDialog");
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Title here");
+        alert.setTitle("Tumpang Login");
 
+        final String loginUrl = "https://us-central1-tumpang-app.cloudfunctions.net/telegramLogin?doc_id=" + MyApplication.user.getIdentifier();
+        Log.d(TAG, "showFirstRunDialog: loginURL=" + loginUrl);
         WebView wv = new WebView(this);
         wv.getSettings().setJavaScriptEnabled(true);
         wv.getSettings().setSupportZoom(true);
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-
                 return true;
             }
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
                         "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
             }
         });
-        wv.loadUrl("https://us-central1-tumpang-app.cloudfunctions.net/telegramLogin?doc_id" + MyApplication.user.getIdentifier());
+        wv.loadUrl(loginUrl);
         wv.addJavascriptInterface(new MyJavascriptInterface(this), "HtmlViewer");
 
         alert.setView(wv);
