@@ -3,6 +3,7 @@ package com.shrmn.is416.tumpang;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class OrderDetailsActivity extends AppCompatActivity {
@@ -13,7 +14,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_details);
 
         // Get order ID
-        getIntent().getStringExtra("orderId");
+        Order order = (Order)getIntent().getSerializableExtra("selectedOrder");
+        Log.d("thisOrder",order.toString());
         // Query db for this orderId
     }
 

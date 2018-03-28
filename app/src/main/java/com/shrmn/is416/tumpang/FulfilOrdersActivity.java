@@ -93,7 +93,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
                 // Go to Order Details activity
                 Intent it = new Intent(FulfilOrdersActivity.this, OrderDetailsActivity.class);
-                it.putExtra("orderId", selectedOrder.getOrderID());
+                it.putExtra("orderId", selectedOrder);
                 startActivity(it);
 
 
