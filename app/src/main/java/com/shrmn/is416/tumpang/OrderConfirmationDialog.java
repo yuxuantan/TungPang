@@ -59,7 +59,7 @@ public class OrderConfirmationDialog extends DialogFragment {
         View dialogView = inflater.inflate(R.layout.dialog_orderconfirmation, null);
 
         TextView orderUser = dialogView.findViewById(R.id.order_user);
-        orderUser.setText("Order Username: " + user.getName());
+        orderUser.setText("Order Username: " + user.getTelegramUsername());
 
         TextView outletLocation = dialogView.findViewById(R.id.outlet_name);
         outletLocation.setText("Outlet Name: " + outletName);
