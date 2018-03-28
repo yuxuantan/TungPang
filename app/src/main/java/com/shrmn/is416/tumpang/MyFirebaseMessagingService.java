@@ -31,7 +31,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
-            showNotification("Notif: ",remoteMessage.getNotification().getBody());
+            showNotification("Order accepted", remoteMessage.getNotification().getBody());
 
 //            Handler handler = new Handler(Looper.getMainLooper());
 //
@@ -45,7 +45,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         else if(remoteMessage.getData()!=null){
             Log.e(TAG, "Notification Body: " + remoteMessage.getData().toString());
-            showNotification("Notif: ",remoteMessage.getData().toString());
+            showNotification("Order Accepted by a User!", remoteMessage.getData().toString().split("=")[1].replaceAll("\\}",""));
         }
 
 
@@ -63,6 +63,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(message)
 //                .setAutoCancel(false)
+                .setStyle(new Notification.BigTextStyle().bigText(message))
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .build();
