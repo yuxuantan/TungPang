@@ -79,16 +79,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     public void updateDBStatus(int updatedStatus){
-        // Code to update DB status to updatedStatus
-        Map<String, Object> data = new HashMap<>();
-        data.put("customerUserID",order.getCustomerUserID());
-        data.put("deliveryLocation",order.getDeliveryLocation());
-        data.put("tipAmount",order.getTipAmount());
-        data.put("locationID", order.getLocationID());
-        data.put("menuItems",order.getMenuItems());
-        data.put("status", updatedStatus);
         //data.put("ETA", ETA); Don't we need to ask user for their ETA as well?
-        MyApplication.db.collection("orders").document(order.getOrderID()).set(data, SetOptions.merge())
+        MyApplication.db.collection("orders").document(order.getOrderID()).update("status", 1)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
