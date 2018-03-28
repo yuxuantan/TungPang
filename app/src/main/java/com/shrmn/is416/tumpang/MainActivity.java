@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
     }
 
     public void openLoginIntent() {
-        Log.d(TAG, "openLoginIntent: Opening login URL " + MyApplication.loginUrl);
+        Log.i(TAG, "openLoginIntent: Opening login URL " + MyApplication.loginUrl);
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(MyApplication.loginUrl));
         startActivity(i);
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
                     String identifier = user.getIdentifier();
                     if (identifier != null) {
                         FirebaseMessaging.getInstance().subscribeToTopic(identifier);
-                        Log.e("Subscribed to topic:", identifier);
+                        Log.i("Subscribed to topic: ", identifier);
                     }
                 }
             }

@@ -121,7 +121,6 @@ public class User {
             }
             this.telegramUsername = telegramUsername;
         }
-
     }
 
     public void setName(String name) {
