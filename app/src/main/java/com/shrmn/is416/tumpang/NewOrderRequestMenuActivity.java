@@ -84,7 +84,7 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
     private void refreshList() {
         HashMap menuMap = MyApplication.pendingOrder.getMenuItems();
         ArrayList<MenuItem> menuItems = new ArrayList<>();
-        for(Object o: menuMap.keySet()){
+        for (Object o : menuMap.keySet()) {
             MenuItem menuItem = (MenuItem) o;
             menuItem.setQuantity((Integer) menuMap.get(menuItem));
             menuItems.add(menuItem);
@@ -115,21 +115,30 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        Task task = MyApplication.db.collection("orders").add(MyApplication.pendingOrder.composeOrder()).addOnSuccessListener(new OnSuccessListener <DocumentReference>()
-        {
-            @Override
-            public void onSuccess (DocumentReference documentReference){
-                Log.d(TAG, "DocumentSnapshot successfully written! ID: " + documentReference.getId());
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error writing document", e);
-            }
-        });
-        Snackbar.make(findViewById(R.id.menu_list), "Order Confirmed!", Snackbar.LENGTH_SHORT).show();
+        MyApplication.db.collection("orders")
+                .add(MyApplication.pendingOrder.composeOrder())
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "Order DocumentSnapshot successfully written! ID: " + documentReference.getId());
+                        Snackbar.make(findViewById(R.id.menu_list), "Order Confirmed!", Snackbar.LENGTH_SHORT).show();
+                        // Send telegram notification to user
+                        MyApplication.sendTelegramNotification(
+                                String.format(
+                                        "We have received your order request for *%d unique items*. Users nearby to _%s_ will be shown your request! A notification will be sent if someone accepts your order.",
+                                        MyApplication.pendingOrder.getMenuItems().size(),
+                                        MyApplication.pendingOrder.getLocationName()
+                                )
+                        );
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error writing order document", e);
+                        Snackbar.make(findViewById(R.id.menu_list), "Order failed! Please try again later.", Snackbar.LENGTH_LONG).show();
+                    }
+                });
     }
-
 
 }

@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20sp"
         android:onClick="confirmButton"
-        android:text="Confirm Order"
+        android:text="Confirm Order Request"
         android:textColor="@color/colorButtonText"
         android:background="@color/colorButton"
         android:textSize="20dp"
