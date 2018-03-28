@@ -1,12 +1,16 @@
 package com.shrmn.is416.tumpang;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -16,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shrmn.is416.tumpang.utilities.FCMRestClient;
+import com.shrmn.is416.tumpang.utilities.MyJavascriptInterface;
 import com.shrmn.is416.tumpang.utilities.VariableChangeListener;
 
 import java.io.FileInputStream;
@@ -40,8 +45,41 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
     private TextView labelWelcome;
 
     public void showFirstRunDialog() {
-        DialogFragment dialog = new FirstRunDialog();
-        dialog.show(getSupportFragmentManager(), "FirstRunDialog");
+//        DialogFragment dialog = new FirstRunDialog();
+//        dialog.show(getSupportFragmentManager(), "FirstRunDialog");
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Title here");
+
+        WebView wv = new WebView(this);
+        wv.getSettings().setJavaScriptEnabled(true);
+        wv.getSettings().setSupportZoom(true);
+        wv.getSettings().setBuiltInZoomControls(true);
+        wv.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+
+                return true;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.loadUrl("javascript:HtmlViewer.showHTML" +
+                        "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+            }
+        });
+        wv.loadUrl("https://us-central1-tumpang-app.cloudfunctions.net/telegramLogin?doc_id" + MyApplication.user.getIdentifier());
+        wv.addJavascriptInterface(new MyJavascriptInterface(this), "HtmlViewer");
+
+        alert.setView(wv);
+        alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     public void setNegativeWelcomeText() {
