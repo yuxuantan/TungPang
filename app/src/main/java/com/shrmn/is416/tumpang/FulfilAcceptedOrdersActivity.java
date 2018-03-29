@@ -85,7 +85,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
 
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Complete Job",
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Purchased!",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Update DB
@@ -236,11 +236,16 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                                         if (telegram == null || telegram.isEmpty()) {
                                             Log.e(TAG, "OrderDetailsActivity: The receiving party (" + document.getId() + ") of the order has not completed telegram setup.");
                                         } else {
+                                            String displayMsg = "Order details: ";
+                                            for(MenuItem item: order.getMenuItems().keySet()){
+                                                displayMsg+=(item.getName()+", qty: "+order.getMenuItems().get(item)+"\n");
+                                            }
                                             // Send telegram notification to yourself with the customer's ID
                                             MyApplication.sendTelegramNotification(
                                                     String.format(
-                                                            "Thank you for accepting the order with ID: %s! Please deliver the purchases to @%s",
+                                                            "**Order Purchase Completed**\nThank you for completing the order with ID: %s! \n%sPlease deliver the purchases to @%s",
                                                             order.getOrderID(),
+                                                            displayMsg,
                                                             otherUser.getTelegramUsername()
                                                     )
                                             );
@@ -248,7 +253,9 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                                             // Send telegram notification to the customer
                                             MyApplication.sendTelegramNotification(
                                                     String.format(
-                                                            "Your order has been purchased and is on the way! Your delivery man's telegram: @%s.",
+                                                            "**Order Delivering**\nYour order with ID: %s has been purchased and is on the way!\n%sYour delivery man's telegram: @%s.",
+                                                            order.getOrderID(),
+                                                            displayMsg,
                                                             MyApplication.user.getTelegramUsername()
                                                     ),
                                                     order.getCustomerUserID()
