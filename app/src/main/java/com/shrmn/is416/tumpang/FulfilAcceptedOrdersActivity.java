@@ -40,7 +40,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
     private static final String TAG = "FulfilAcceptedOrders";
     private ArrayAdapter<String> adapter;
 
-    public static String selectedTeleUsername = "";
+    public String selectedTeleUsername;
 
     static {
 
@@ -106,14 +106,14 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
         finish();
     }
 
-    public void goToOrderDetails(){
+    public void goToOrderDetails() {
         Intent orderDetailsIntent = new Intent(this, OrderDetailsActivity.class);
         startActivity(orderDetailsIntent);
 
     }
 
     private void retrieveOrders() {
-        MyApplication.db.collection("orders").whereEqualTo("status", 1).whereEqualTo("deliveryManUserID",MyApplication.user.getIdentifier()).get().addOnCompleteListener(
+        MyApplication.db.collection("orders").whereEqualTo("status", 1).whereEqualTo("deliveryManUserID", MyApplication.user.getIdentifier()).get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -216,22 +216,54 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
         );
     }
 
-    public void updateDBStatus(final Order order){
+    public void updateDBStatus(final Order order) {
         //data.put("ETA", ETA); Don't we need to ask user for their ETA as well?
         MyApplication.db.collection("orders").document(order.getOrderID()).update("status", 2)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.e("OrderDetailsActivity", "Order updated.");
-                        // Send telegram notification (of your own tele name) to the customer
-                        retrieveTelegramUsername(order.getCustomerUserID());
-                        MyApplication.sendTelegramNotification("Your order has been purchaced and is on the way!"
-                        +".\nYour delivery man's telegram: "+ "https://t.me/"+ MyApplication.user.getTelegramUsername(), selectedTeleUsername);
-                        // Send telegram notification to the delivery person (Self)
-                        MyApplication.sendTelegramNotification("Thank you for accepting the order with ID: " + order.getOrderID()
-                                +".\nYour customer's telegram: "+ "https://t.me/"+selectedTeleUsername);
+                        Log.e(TAG, "OrderDetailsActivity: Order " + order.getOrderID() + " updated.");
+
+                        MyApplication.actionOnUser(order.getCustomerUserID(), new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document != null && document.exists()) {
+                                        User otherUser = document.toObject(User.class);
+                                        Map<String, Object> telegram = otherUser.getTelegram();
+
+                                        if (telegram == null || telegram.isEmpty()) {
+                                            Log.e(TAG, "OrderDetailsActivity: The receiving party (" + document.getId() + ") of the order has not completed telegram setup.");
+                                        } else {
+                                            // Send telegram notification to yourself with the customer's ID
+                                            MyApplication.sendTelegramNotification(
+                                                    String.format(
+                                                            "Thank you for accepting the order with ID: %s! Please deliver the purchases to @%s",
+                                                            order.getOrderID(),
+                                                            otherUser.getTelegramUsername()
+                                                    )
+                                            );
+
+                                            // Send telegram notification to the customer
+                                            MyApplication.sendTelegramNotification(
+                                                    String.format(
+                                                            "Your order has been purchased and is on the way! Your delivery man's telegram: @%s.",
+                                                            MyApplication.user.getTelegramUsername()
+                                                    ),
+                                                    order.getCustomerUserID()
+                                            );
+
+                                            Log.i(TAG, "OrderDetailsActivity: Telegram Messages sent");
+                                        }
+                                    } else {
+                                        Log.e(TAG, "OrderDetailsActivity: The receiving party (" + document.getId() + ") of the order does not seem to be available on the database.");
+                                    }
+                                }
+                            }
+                        });
+
                         retrieveOrders();
-                        Log.e("OrderDetailsActivity", "Msg sent" );
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -240,32 +272,6 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                         Log.e("OrderDetailsActivity", "Error updating Order", e);
                     }
                 });
-
-
-
-    }
-    // Query user's table, retrieve telegram name of user with that identifier
-    private void retrieveTelegramUsername(String identifier) {
-        MyApplication.db.collection("users").whereEqualTo("identifier", identifier).get().addOnCompleteListener(
-                new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            // For each entry ie. order
-                            for (DocumentSnapshot document : task.getResult()) {
-
-                                Map<String, Object> data = document.getData();
-                                selectedTeleUsername = data.get("telegramUsername").toString();
-                                Log.e("TELE", selectedTeleUsername.toString() );
-
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting telegram Username: ", task.getException());
-                        }
-
-                    }
-                }
-        );
     }
 
 }

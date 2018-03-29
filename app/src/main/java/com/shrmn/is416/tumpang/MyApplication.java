@@ -364,30 +364,32 @@ public class MyApplication extends Application {
 
     // Overloaded method to send telegram notification to a given User Identifier via the chatbot
     public static void sendTelegramNotification(final String message, final String userIdentifier) {
-        DocumentReference docRef = db.collection(USERS_COLLECTION).document(userIdentifier);
+        actionOnUser(userIdentifier, new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        User otherUser = document.toObject(User.class);
+                        Map<String, Object> telegram = otherUser.getTelegram();
 
-        docRef.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document != null && document.exists()) {
-                                User otherUser = document.toObject(User.class);
-                                Map<String, Object> telegram = user.getTelegram();
-
-                                // Force a token retrieval if there is no token currently associated with this user
-                                if (telegram == null || telegram.isEmpty()) {
-                                    Log.e(TAG, "sendTelegramNotification: Unable to send to " + userIdentifier + " as he/she has not logged into Telegram");
-                                } else {
-                                    sendTelegramNotification(message, Integer.parseInt(telegram.get("id").toString()));
-                                }
-                            } else {
-                                Log.e(TAG, "sendTelegramNotification: Unable to send to " + userIdentifier + " as he/she has not logged into Telegram");
-                            }
+                        // Force a token retrieval if there is no token currently associated with this user
+                        if (telegram == null || telegram.isEmpty()) {
+                            Log.e(TAG, "sendTelegramNotification: Unable to send to " + userIdentifier + " as he/she has not logged into Telegram");
+                        } else {
+                            sendTelegramNotification(message, Integer.parseInt(telegram.get("id").toString()));
                         }
+                    } else {
+                        Log.e(TAG, "sendTelegramNotification: Unable to send to " + userIdentifier + " as he/she has not logged into Telegram");
                     }
-                });
+                }
+            }
+        });
+    }
+
+    public static void actionOnUser(final String userIdentifier, OnCompleteListener<DocumentSnapshot> onComplete) {
+        DocumentReference docRef = db.collection(USERS_COLLECTION).document(userIdentifier);
+        docRef.get().addOnCompleteListener(onComplete);
     }
 
     public static String escapeForJson( String value, boolean quote )
