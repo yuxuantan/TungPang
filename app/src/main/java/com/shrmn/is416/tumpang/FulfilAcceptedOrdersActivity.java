@@ -243,7 +243,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                                             // Send telegram notification to yourself with the customer's ID
                                             MyApplication.sendTelegramNotification(
                                                     String.format(
-                                                            "**Order Purchase Completed**\nThank you for completing the order with ID: %s! \n%sPlease deliver the purchases to @%s",
+                                                            "*Order Purchase Completed*\nThank you for completing the order with ID: %s! \n%sPlease deliver the purchases to @%s",
                                                             order.getOrderID(),
                                                             displayMsg,
                                                             otherUser.getTelegramUsername()
@@ -253,7 +253,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
                                             // Send telegram notification to the customer
                                             MyApplication.sendTelegramNotification(
                                                     String.format(
-                                                            "**Order Delivering**\nYour order with ID: %s has been purchased and is on the way!\n%sYour delivery man's telegram: @%s.",
+                                                            "*Order Delivering*\nYour order with ID: %s has been purchased and is on the way!\n%sYour delivery man's telegram: @%s.",
                                                             order.getOrderID(),
                                                             displayMsg,
                                                             MyApplication.user.getTelegramUsername()

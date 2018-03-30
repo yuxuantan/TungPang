@@ -89,7 +89,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
                 beaconManager.stopRanging(region);
 
                 String selectedOrderTitle = parent.getItemAtPosition(position).toString();
-                Order selectedOrder = allUnassignedOrders.get(position);
+                Order selectedOrder = allUnassignedOrdersInRange.get(position);
 
                 // Go to Order Details activity
                 Intent it = new Intent(FulfilOrdersActivity.this, OrderDetailsActivity.class);
@@ -188,11 +188,14 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         for (Order o : allUnassignedOrders) {
             for (Beacon beacon : beacons) {
                 Log.e("BEACON DETECTED", beacon.getMacAddress().toString());
-                Log.e("Current Order Beacon ID", "["+MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress()+"]");
+                // Only show orders matching macadd
                 if(beacon.getMacAddress().toString().equals("["+MyApplication.locations.get(o.getLocationID()).getBeaconMacAddress()+"]")){
-//                    // Only show orders matching macadd
-                    allUnassignedOrdersInRange.add(o);
-                    Log.e("Order added", o.toString());
+                    // Only show orders that are not created by me
+                    if(!o.getCustomerUserID().equals(MyApplication.user.getIdentifier())){
+                        allUnassignedOrdersInRange.add(o);
+//                        Log.e("TEST", o.getCustomerUserID()+"||"+MyApplication.user.getIdentifier());
+                    }
+
                 }
             }
         }

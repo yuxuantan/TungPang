@@ -104,4 +104,9 @@ public class MainActivity extends AppCompatActivity implements FirstRunDialog.Fi
         Log.d(TAG, "onClickLoginButton: Pressed.");
         openLoginIntent();
     }
+
+    public void goToMyPlacedOrders(View view) {
+        Intent it = new Intent(this, MyPlacedOrdersActivity.class);
+        startActivity(it);
+    }
 }

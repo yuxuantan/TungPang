@@ -58,8 +58,8 @@
         <activity android:name=".AddItemActivity" />
         <activity android:name=".NewOrderRequestMenuActivity" />
         <activity android:name=".OrderDetailsActivity" />
-        <activity android:name=".FulfilAcceptedOrdersActivity"/>
-
+        <activity android:name=".FulfilAcceptedOrdersActivity" />
+        <activity android:name=".MyPlacedOrdersActivity"></activity>
     </application>
 
 </manifest>
