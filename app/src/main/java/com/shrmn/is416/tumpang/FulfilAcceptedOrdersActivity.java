@@ -57,11 +57,8 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
 
         retrieveOrders();
 //LIST VIEW SET
-        acceptedOrdersNames.add("Testing Order 1");
-        acceptedOrdersNames.add("Testing Tea Party");
-        acceptedOrdersNames.add("Testing Food Republic");
 
-        ListView lv = (ListView) findViewById(R.id.orders_list);
+        ListView lv = (ListView) findViewById(R.id.fulfil_accepted_ordersListView);
         adapter = new ArrayAdapter<String>(
                 this,//context
                 R.layout.mylistlayout,//custom_layout
