@@ -112,26 +112,16 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                 }
 
 
-
                                 // Menu Item includes more details of the menu like name. what is stored in DB is links
-                                /**Can we push list of drinks into static list?**/
                                 HashMap<MenuItem, Integer> menuItems = new HashMap<>();
-
-
                                 for (Object dbMenuItem : dbOrderMenuItems) {
-                                    long qty = ((Map<String, Long>)dbMenuItem).get("qty");
+                                    long qty = ((Map<String, Long>) dbMenuItem).get("qty");
                                     // Change item string reference (menuItem.get("item")) to locations table into a menu item object, and put in menuitems hashmap
-                                    String[] references = ((Map<String, String>)dbMenuItem).get("item").split("/");
-//                                    Log.e("ref", Arrays.toString(references));
-                                    // eg. get "Food[0]" --> (Food , 0)
+                                    String[] references = ((Map<String, String>) dbMenuItem).get("item").split("/");
                                     String tmp[] = references[2].split("\\[|\\]");
-//                                    String type = tmp[0];
-//                                    Log.e("Location", location.toString());
-                                    MenuItem item = null;
-                                    if(location!=null)
-                                        item = location.getMenu().getItems().get(Integer.parseInt(tmp[1]));
-//                                        Log.e("qty" , qty+"");
-                                    menuItems.put(item, (int)qty);
+                                    if (location != null) {
+                                        menuItems.put(location.getMenu().getItems().get(Integer.parseInt(tmp[1])), (int) qty);
+                                    }
                                 }
 
                                 // Actually this will never happen, since if filter order = unassigned, est time delivery WILL be null
@@ -141,6 +131,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                                     orderId,
                                                     locID,
                                                     locationName,
+                                                    location,
                                                     Double.parseDouble(data.get("tipAmount").toString()),
                                                     Long.parseLong(data.get("estimatedTimeOfDelivery").toString()),
                                                     data.get("deliveryManUserID").toString(),
@@ -157,6 +148,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                                     orderId,
                                                     locID,
                                                     locationName,
+                                                    location,
                                                     Double.parseDouble(data.get("tipAmount").toString()),
                                                     0,
                                                     "",

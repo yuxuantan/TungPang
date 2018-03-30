@@ -56,4 +56,4 @@
         android:text="$ 1.00"
         android:textSize="18sp" />
 
-</GridLayout><!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
+</GridLayout>

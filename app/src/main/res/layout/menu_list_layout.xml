@@ -1,57 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mylistitem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/mylistitem"
-    android:columnCount="4">
+    android:paddingBottom="@dimen/listItem_margin"
+    android:paddingTop="@dimen/listItem_margin">
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:layout_width="100dp"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_column="0"
+        android:layout_columnWeight="3"
+        android:layout_marginLeft="@dimen/listItem_margin"
         android:layout_row="0"
-        android:text="Food Name:"
-        android:textSize="16sp"
-        android:textColor="@color/colorTextHeading"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/label_food_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name:"
+            android:textColor="@color/colorTextHeading"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/pendingFoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bak Chor Mee"
+            android:textSize="16sp"
+            android:layout_marginLeft="@dimen/listItem_margin"
+            app:layout_constraintLeft_toRightOf="@id/label_food_name"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/label_unit_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unit Price:"
+            android:textColor="@color/colorTextHeading"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_food_name" />
+
+        <TextView
+            android:id="@+id/pendingUnitPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$0.15"
+            android:layout_marginLeft="@dimen/listItem_margin"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/label_unit_price"
+            app:layout_constraintTop_toBottomOf="@id/pendingFoodName" />
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/pendingFoodName"
-        android:layout_width="150dp"
-        android:layout_column="1"
-        android:layout_row="0" />
-
-    <TextView
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
-        android:layout_width="100dp"
-        android:layout_column="0"
-        android:layout_row="1"
-        android:text="Unit Price:"
-        android:textSize="16sp"
-        android:textColor="@color/colorTextHeading"/>
-
-    <TextView
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/pendingUnitPrice"
-        android:layout_width="150dp"
-        android:layout_column="1"
-        android:layout_row="1" />
-
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
         android:id="@+id/pendingUnitQty"
-        android:layout_width="100dp"
-        android:layout_column="2"
-        android:layout_row="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
         android:layout_gravity="center_vertical"
-        android:layout_rowSpan="2"
-        android:textSize="20sp" />
+        android:layout_marginRight="@dimen/listItem_margin"
+        android:layout_row="0"
+        android:gravity="right"
+        android:text="$ 1.00"
+        android:textSize="18sp" />
 
 </GridLayout>
-    <!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->

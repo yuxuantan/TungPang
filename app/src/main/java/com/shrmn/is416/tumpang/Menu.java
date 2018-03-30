@@ -1,12 +1,13 @@
 package com.shrmn.is416.tumpang;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by man on 19/3/18.
  */
 
-public class Menu {
+public class Menu implements Serializable {
     private ArrayList<MenuItem> items;
     private ArrayList<Drink> drinks;
     private ArrayList<Food> food;

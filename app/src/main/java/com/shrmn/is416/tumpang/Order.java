@@ -26,10 +26,11 @@ public class Order implements Serializable {
     private int status = 0;
 
 
-    public Order(String orderID, String locationID, String locationName, double tipAmount, long estimatedTimeOfDelivery, String deliveryManUserID, String customerUserID, HashMap<MenuItem, Integer> menuItems, String deliveryLocation, int status) {
+    public Order(String orderID, String locationID, String locationName, Location location, double tipAmount, long estimatedTimeOfDelivery, String deliveryManUserID, String customerUserID, HashMap<MenuItem, Integer> menuItems, String deliveryLocation, int status) {
         this.orderID = orderID;
         this.locationID = locationID;
         this.locationName = locationName;
+        this.location = location;
         this.tipAmount = tipAmount;
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
         this.deliveryManUserID = deliveryManUserID;
@@ -184,6 +185,26 @@ public class Order implements Serializable {
 
     public HashMap<MenuItem,Integer> getMenuItems() {
         return menuItems;
+    }
+
+    public int getTotalQuantity() {
+        int total = 0;
+        for(int qty : menuItems.values())
+            total += qty;
+        return total;
+    }
+
+    public double getBill() {
+        double totalAmount = 0;
+        for(MenuItem menuItem : menuItems.keySet()) {
+            totalAmount += menuItem.getUnitPrice() * menuItems.get(menuItem);
+        }
+
+        return totalAmount;
+    }
+
+    public double getTotalOrderBill() {
+        return tipAmount + getBill();
     }
 }
 

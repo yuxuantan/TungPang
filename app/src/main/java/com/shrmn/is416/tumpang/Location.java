@@ -1,6 +1,8 @@
 package com.shrmn.is416.tumpang;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     public String getLocationID() {
         return locationID;
     }
@@ -41,8 +43,6 @@ public class Location {
     private String name;
     private String address;
     private String beaconMacAddress;
-//    private long beaconIDMajor;
-//    private long beaconIDMinor;
     private Menu menu;
 
     public Location (String locationID, String name, String address, String beaconMacAddress, Menu menu){
@@ -50,8 +50,6 @@ public class Location {
         this.name = name;
         this.address = address;
         this.beaconMacAddress = beaconMacAddress;
-//        this.beaconIDMajor = beaconIDMajor;
-//        this.beaconIDMinor = beaconIDMinor;
         this.menu = menu;
     }
 
