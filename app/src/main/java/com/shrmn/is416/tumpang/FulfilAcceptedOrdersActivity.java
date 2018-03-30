@@ -57,12 +57,15 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
 
         retrieveOrders();
 //LIST VIEW SET
+        acceptedOrdersNames.add("Testing Order 1");
+        acceptedOrdersNames.add("Testing Tea Party");
+        acceptedOrdersNames.add("Testing Food Republic");
 
         ListView lv = (ListView) findViewById(R.id.orders_list);
         adapter = new ArrayAdapter<String>(
                 this,//context
                 R.layout.mylistlayout,//custom_layout
-                R.id.mylistitem,// referring the widget (TextView) where the items to be displayed
+                R.id.DefaultItemList1,// referring the widget (TextView) where the items to be displayed
                 acceptedOrdersNames//items
         );
 
