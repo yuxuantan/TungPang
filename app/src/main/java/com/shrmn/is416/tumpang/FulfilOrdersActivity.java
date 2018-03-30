@@ -71,13 +71,42 @@ public class FulfilOrdersActivity extends AppCompatActivity {
 
         retrieveOrders();
 
+        // Testing Stubb Data
+        // unassignedRestaurantNamesInRange.add("Testing Subway");
+        // unassignedRestaurantNamesInRange.add("Testing Tea Party");
+        // unassignedRestaurantNamesInRange.add("Testing Food Republic");
+
+        HashMap<MenuItem, Integer> menuHash = new HashMap<>();
+        Order testingOrder =
+                new Order(
+                        "TestingStringId",
+                        "StringLocationID",
+                        "TestingStringLocationName",
+                        10.0,
+                        Long.parseLong("15"),
+                        "DeliverManUserId",
+                        "TestingCustomerUserId",
+                        menuHash,
+                        "DeliveryLocation",
+                        1);
+        MenuItem item1 = new Food("FakePath","Testing 1", 20.0);
+        MenuItem item2 = new Food("FakePath","Testing 2", 30.0);
+        MenuItem item3 = new Food("FakePath","Testing 3", 40.0);
+        MenuItem item4 = new Food("FakePath","Testing 4", 50.0);
+
+        testingOrder.addMenuItem(item1,5);
+        testingOrder.addMenuItem(item2, 10);
+        testingOrder.addMenuItem(item3, 15);
+        testingOrder.addMenuItem(item4, 20);
+
+        allUnassignedOrdersInRange.add(testingOrder);
 
         // Initialize List View
         ListView lv = (ListView) findViewById(R.id.orders_list);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,//context
                 R.layout.mylistlayout,//custom_layout
-                R.id.mylistitem,// referring the widget (TextView) where the items to be displayed
+                R.id.UnAssignedRestaurantNames,// referring the widget (TextView) where the items to be displayed
                 unassignedRestaurantNamesInRange//items
         );
 
