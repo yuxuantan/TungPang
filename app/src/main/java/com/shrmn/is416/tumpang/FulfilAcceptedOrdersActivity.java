@@ -38,7 +38,7 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
     public BeaconRegion region;
 
     private static final String TAG = "FulfilAcceptedOrders";
-    private ArrayAdapter<String> adapter;
+    private FulfilOrderItemAdapter adapter;
 
     public String selectedTeleUsername;
 
@@ -58,16 +58,12 @@ public class FulfilAcceptedOrdersActivity extends AppCompatActivity {
         retrieveOrders();
 //LIST VIEW SET
 
-        ListView lv = (ListView) findViewById(R.id.fulfil_accepted_ordersListView);
-        adapter = new ArrayAdapter<String>(
-                this,//context
-                R.layout.mylistlayout,//custom_layout
-                R.id.DefaultItemList1,// referring the widget (TextView) where the items to be displayed
-                acceptedOrdersNames//items
-        );
+        ListView fulfiledAccepted_OrderListView = (ListView) findViewById(R.id.fulfil_accepted_ordersListView);
+        adapter = new FulfilOrderItemAdapter(this, 0, acceptedOrders);
 
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        fulfiledAccepted_OrderListView.setAdapter(adapter);
+        fulfiledAccepted_OrderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 

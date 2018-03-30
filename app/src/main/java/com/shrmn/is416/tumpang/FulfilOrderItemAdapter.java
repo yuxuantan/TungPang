@@ -56,7 +56,7 @@ public class FulfilOrderItemAdapter extends ArrayAdapter<Order> {
         if (tipAmount == 0.50){
             String fiftyCent = fulfilOrder_Orderdetail.getTipAmount() + "0";
             fiftyCent = fiftyCent.substring(2);
-            orderTipAmount.setText(fiftyCent+" C");
+            orderTipAmount.setText(fiftyCent+" ¢");
         }else {
             orderTipAmount.setText("$ " + fulfilOrder_Orderdetail.getTipAmount());
         }

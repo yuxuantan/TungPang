@@ -19,7 +19,7 @@
         app:layout_constraintTop_toBottomOf="parent" />
 
     <ListView
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:id="@+id/fulfil_accepted_ordersListView"
         android:layout_width="match_parent"
         android:layout_height="360dp"
