@@ -72,9 +72,9 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         retrieveOrders();
 
         // Testing Stubb Data
-        // unassignedRestaurantNamesInRange.add("Testing Subway");
-        // unassignedRestaurantNamesInRange.add("Testing Tea Party");
-        // unassignedRestaurantNamesInRange.add("Testing Food Republic");
+        unassignedRestaurantNamesInRange.add("Testing Subway");
+        unassignedRestaurantNamesInRange.add("Testing Tea Party");
+        unassignedRestaurantNamesInRange.add("Testing Food Republic");
 
         HashMap<MenuItem, Integer> menuHash = new HashMap<>();
         Order testingOrder =
@@ -106,7 +106,7 @@ public class FulfilOrdersActivity extends AppCompatActivity {
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,//context
                 R.layout.mylistlayout,//custom_layout
-                R.id.UnAssignedRestaurantNames,// referring the widget (TextView) where the items to be displayed
+                R.id.DefaultItemList1,// referring the widget (TextView) where the items to be displayed
                 unassignedRestaurantNamesInRange//items
         );
 
