@@ -38,9 +38,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
         Log.d("SelectedOrder", order.toString());
         double OrderBill = 0;
 
-        String menuItemDetails = "<ul>";
+        String menuItemDetails = "<br/>";
         for (MenuItem item : order.getMenuItems().keySet()) {
-            menuItemDetails += ("<li>" + order.getMenuItems().get(item) + "x " + item.getName() + " - $" + Math.round(item.getUnitPrice() * order.getMenuItems().get(item)) + "</li>");
+            menuItemDetails += (order.getMenuItems().get(item) + "x " + item.getName() + " - $" + Math.round(item.getUnitPrice() * order.getMenuItems().get(item)) + "<br/>");
             OrderBill += (Math.round(item.getUnitPrice() * order.getMenuItems().get(item)));
         }
         menuItemDetails += "</ul>";
