@@ -173,6 +173,9 @@ public class FulfilOrdersActivity extends AppCompatActivity {
             }
         });
 
+        // Send notification regarding number of new orders
+
+
     }
 
 

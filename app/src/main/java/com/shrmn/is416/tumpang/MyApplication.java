@@ -204,16 +204,16 @@ public class MyApplication extends Application {
             @Override
             public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
                 showNotification(
-                        "ENTERED!",
-                        "Just entered the range of a beacon");
+                        "You are near a Tumpang Shop!",
+                        "Earn some quick cash! Check out orders placed by other users at this shop.");
                 Log.d(TAG, "Beacons: " + beacons.toString());
             }
 
             @Override
             public void onExitedRegion(BeaconRegion region) {
-                showNotification(
-                        "Exited!",
-                        "Just exited the range of a beacon");
+//                showNotification(
+//                        "Exited!",
+//                        "Just exited the range of a beacon");
             }
 
         });
