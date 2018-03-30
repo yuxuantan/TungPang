@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shrmn.is416.tumpang.OrderDetailsActivity"
-    android:orientation="vertical">
+    tools:context="com.shrmn.is416.tumpang.OrderDetailsActivity">
+
     <TextView
+        android:id="@+id/order_details_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="20sp"
+        android:paddingRight="20sp"
         android:text="Order Details"
-        android:textSize="30dp" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:onClick="finishActivity"/>
+        android:textColor="@color/colorTextHeading"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="parent" />
 
     <TextView
-        android:id="@+id/details_tv"
+        android:id="@+id/order_detailsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="ORDER1   Qty 1\nORDER2 Qty 2\nORDER3 Qty3" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Accept this!!"
-        android:onClick="acceptedOrder"/>
+        android:padding="20dp"
+        android:textAlignment="center"
+        android:text="ORDER1   Qty 1\nORDER2 Qty 2\nORDER3 Qty3"
+        app:layout_constraintTop_toBottomOf="@+id/order_details_header"/>
 
-</LinearLayout>
+
+    <Button
+        android:id="@+id/accept_this"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="acceptedOrder"
+        android:text="Accept this"
+        android:background="@color/colorButton"
+        android:textColor="@color/colorButtonText"
+        android:layout_margin="20sp"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

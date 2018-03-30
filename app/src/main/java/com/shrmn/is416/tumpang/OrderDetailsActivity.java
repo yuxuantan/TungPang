@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -57,8 +58,25 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 Log.e("OrderDetailsActivity", order.toString());
             }
         }*/
-        TextView detailsTv = (TextView) findViewById(R.id.details_tv);
-        detailsTv.setText(order.toString());
+        double OrderBill = 0;
+        for(MenuItem menuItem: order.getMenuItems().keySet() ) {
+            OrderBill += menuItem.getUnitPrice() * menuItem.getQuantity();
+        }
+
+        String menuItemDetails = "Order Details:";
+        for(MenuItem item: order.getMenuItems().keySet()){
+            menuItemDetails+=("\n- " + order.getMenuItems().get(item)+ "x "+item.getName());
+        }
+        OrderBill+= order.getTipAmount();
+
+        String detailsText = "<b>Order ID: </b> " + order.getOrderID()+ "<br/>" + "<b>Customer UserID: </b>" + order.getCustomerUserID() +
+                "<br/>" + "<b> Location Name: </b>" + order.getLocationName() + "<br/>" + "<b> Deliver Location: </b>" + order.getDeliveryLocation()
+                +"<br/>" + "<b> Menu Item Details: </b>" + menuItemDetails + "<br/>" + "<b>Tip Amount: </b>$ " + order.getTipAmount() +
+                "<br/>" + "<b>Total OrderBill: </b>$" + OrderBill;
+
+
+        TextView detailsTv = (TextView) findViewById(R.id.order_detailsTextView);
+        detailsTv.setText(Html.fromHtml(detailsText));
 
     }
 
