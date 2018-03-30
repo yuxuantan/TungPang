@@ -18,14 +18,20 @@
         android:textSize="30sp"
         app:layout_constraintTop_toBottomOf="parent" />
 
-    <TextView
-        android:id="@+id/order_detailsTextView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:textAlignment="center"
-        android:text="ORDER1   Qty 1\nORDER2 Qty 2\nORDER3 Qty3"
-        app:layout_constraintTop_toBottomOf="@+id/order_details_header"/>
+        android:layout_marginTop="40dp">
+        <TextView
+            android:id="@+id/order_detailsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="50dp"
+            android:layout_gravity="left"
+            android:text="ORDER1   Qty 1\nORDER2 Qty 2\nORDER3 Qty3"
+            app:layout_constraintTop_toBottomOf="@+id/order_details_header"/>
+    </ScrollView>
 
 
     <Button
