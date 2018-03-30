@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="My Accepted Orders"
         android:textColor="@color/colorTextHeading"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:paddingLeft="20sp"
         android:paddingRight="20sp"
         android:layout_marginTop="10dp"
