@@ -130,6 +130,8 @@ public class NewOrderRequestMenuActivity extends AppCompatActivity implements Or
                                         MyApplication.pendingOrder.getLocationName()
                                 )
                         );
+                        MyApplication.pendingOrder = null;
+                        startActivity(new Intent(NewOrderRequestMenuActivity.this, MainActivity.class));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

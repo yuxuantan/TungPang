@@ -72,7 +72,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         String detailsText = "<b>Order ID: </b> " + order.getOrderID()+ "<br/>" + "<b>Customer UserID: </b>" + order.getCustomerUserID() +
                 "<br/>" + "<b> Location Name: </b>" + order.getLocationName() + "<br/>" + "<b> Deliver Location: </b>" + order.getDeliveryLocation()
                 +"<br/>" + "<b> Menu Item Details: </b>" + menuItemDetails + "<br/>" + "<b>Tip Amount: </b>$ " + order.getTipAmount() +
-                "<br/>" + "<b>Total OrderBill: </b>$" + OrderBill;
+                "<br/>" + "<b>Total OrderBill: </b>$ " + OrderBill;
 
 
         TextView detailsTv = (TextView) findViewById(R.id.order_detailsTextView);
