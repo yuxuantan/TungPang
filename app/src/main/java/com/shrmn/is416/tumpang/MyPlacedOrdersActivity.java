@@ -7,10 +7,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,10 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MyPlacedOrdersActivity extends AppCompatActivity {
-//    private ArrayList<String> myPlacedOrdersNames = new ArrayList<>();
     private ArrayList<Order> myPlacedOrders = new ArrayList<>();
     private static final String TAG = "MyPlacedOrdersActivity";
-    private static FulfilOrderItemAdapter adapter;
+    private FulfilOrderItemAdapter adapter;
+    private ListView lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
 
 
         // Initialize List View
-        ListView lv = (ListView) findViewById(R.id.my_placed_orders_list);
+        lv = findViewById(R.id.my_placed_orders_list);
         adapter = new FulfilOrderItemAdapter(
                 this,//context
                 0, // referring the widget (TextView) where the items to be displayed
@@ -47,35 +49,67 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                // Pause refresh
-
-                String selectedOrderTitle = parent.getItemAtPosition(position).toString();
                 final Order selectedOrder = myPlacedOrders.get(position);
 
-//                // Go to Order Details activity
-//                Intent it = new Intent(MyPlacedOrdersActivity.this, OrderDetailsActivity.class);
-//                it.putExtra("selectedOrder", selectedOrder);
-//                startActivity(it);
-                AlertDialog alertDialog = new AlertDialog.Builder(MyPlacedOrdersActivity.this).create();
-                alertDialog.setTitle(selectedOrderTitle);
-                alertDialog.setMessage(selectedOrder.toString());
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                String outletAddress = selectedOrder.getLocation().getAddress();
+                String deliveryLocation = selectedOrder.getDeliveryLocation();
 
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Delete Order",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Update DB
-                                deleteOrder(selectedOrder.getOrderID());
+                String strTipAmount = String.format("%.2f", selectedOrder.getTipAmount());
+                String strOrderBill = String.format("%.2f", selectedOrder.getBill());
+                String strOrderTotal = String.format("%.2f", selectedOrder.getTotalOrderBill());
 
-                            }
-                        });
-                alertDialog.show();
-                alertDialog.setCanceledOnTouchOutside(false);
+                AlertDialog builder = new AlertDialog.Builder(MyPlacedOrdersActivity.this).create();
+                // Get the layout inflater
+                LayoutInflater inflater = MyPlacedOrdersActivity.this.getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialog_orderconfirmation, null);
+
+//                TextView orderUser = dialogView.findViewById(R.id.order_user);
+//                orderUser.setText("Order Username: " + user.getTelegramUsername());
+
+                TextView headerText = dialogView.findViewById(R.id.order_dialog_header_text);
+                headerText.setText("Order Details");
+
+                TextView startingText = dialogView.findViewById(R.id.order_dialog_starting_text);
+                startingText.setText("ID: " + selectedOrder.getOrderID());
+
+                TextView outletLocation = dialogView.findViewById(R.id.outlet_name);
+                outletLocation.setText("Outlet:\n" + selectedOrder.getLocationName());
+
+                TextView outletAdd = dialogView.findViewById(R.id.outlet_address);
+                outletAdd.setText(outletAddress);
+
+                TextView deliveryLoc = dialogView.findViewById(R.id.delivery_location);
+                deliveryLoc.setText("Delivery Location: " + deliveryLocation);
+
+                TextView tip = dialogView.findViewById(R.id.final_tip_amount);
+                tip.setText("Tip Amount: $ " + strTipAmount);
+
+                TextView orderQty = dialogView.findViewById(R.id.order_qty);
+                orderQty.setText("Total Quantity: " +selectedOrder.getTotalQuantity());
+
+                TextView orderBill = dialogView.findViewById(R.id.order_bill);
+                orderBill.setText("Order Bill: $ " + strOrderBill);
+
+                TextView totalBill = dialogView.findViewById(R.id.total_orderbill);
+                totalBill.setText("Order Total: $ " + strOrderTotal);
+
+                // Inflate and set the layout for the dialog
+                // Pass null as the parent view because its going in the dialog layout
+                builder.setView(dialogView);
+
+                builder.setButton(AlertDialog.BUTTON_POSITIVE, "Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setButton(AlertDialog.BUTTON_NEGATIVE, "Delete Order", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteOrder(selectedOrder.getOrderID());
+                    }
+                });
+                builder.show();
 
             }
         });
@@ -89,28 +123,23 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-//                            myPlacedOrdersNames.clear();
                             myPlacedOrders.clear();
                             // For each entry ie. order
                             for (DocumentSnapshot document : task.getResult()) {
                                 String orderId = document.getId();
                                 Map<String, Object> data = document.getData();
 
-                                Log.e("TESTING", document.getId() + " => " + data);
-
                                 // ArrayList of HashMaps, 1 for each item. Key(item and qty)
-//                                ArrayList<Map<String, String>> dbOrderMenuItems = (ArrayList<Map<String, String>>) data.get("menuItems");
                                 ArrayList<Object> dbOrderMenuItems = (ArrayList<Object>)data.get("menuItems");
-                                String locID = (String) data.get("locationID").toString().split("/")[2];
-//                                Log.e("locID", locID);
+                                String locID = data.get("locationID").toString().split("/")[2];
                                 Location location = null;
                                 String locationName = "";
+
                                 if(locID!=null){
                                     location = MyApplication.locations.get(locID);
                                     if(location!=null)
                                         locationName = location.getName();
                                 }
-
 
                                 // Menu Item includes more details of the menu like name. what is stored in DB is links
                                 HashMap<MenuItem, Integer> menuItems = new HashMap<>();
@@ -161,13 +190,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                 }
 
                             }
-//                            Log.d("TESTING2", myPlacedOrders.toString());
-//                            for (Order o : myPlacedOrders) {
-//                                myPlacedOrdersNames.add(o.getLocationName());
-//                            }
                             adapter.notifyDataSetChanged();
-
-
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
