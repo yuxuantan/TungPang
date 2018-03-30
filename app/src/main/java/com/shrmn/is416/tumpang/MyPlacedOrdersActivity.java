@@ -1,8 +1,8 @@
 package com.shrmn.is416.tumpang;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,7 +34,6 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_placed_orders);
-
 
         // Initialize List View
         lv = findViewById(R.id.my_placed_orders_list);
@@ -85,7 +83,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                 tip.setText("Tip Amount: $ " + strTipAmount);
 
                 TextView orderQty = dialogView.findViewById(R.id.order_qty);
-                orderQty.setText("Total Quantity: " +selectedOrder.getTotalQuantity());
+                orderQty.setText("Total Quantity: " + selectedOrder.getTotalQuantity());
 
                 TextView orderBill = dialogView.findViewById(R.id.order_bill);
                 orderBill.setText("Order Bill: $ " + strOrderBill);
@@ -113,7 +111,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
 
             }
         });
-        if(MyApplication.user!=null)
+        if (MyApplication.user != null)
             retrieveOrders();
     }
 
@@ -130,14 +128,14 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                 Map<String, Object> data = document.getData();
 
                                 // ArrayList of HashMaps, 1 for each item. Key(item and qty)
-                                ArrayList<Object> dbOrderMenuItems = (ArrayList<Object>)data.get("menuItems");
+                                ArrayList<Object> dbOrderMenuItems = (ArrayList<Object>) data.get("menuItems");
                                 String locID = data.get("locationID").toString().split("/")[2];
                                 Location location = null;
                                 String locationName = "";
 
-                                if(locID!=null){
+                                if (locID != null) {
                                     location = MyApplication.locations.get(locID);
-                                    if(location!=null)
+                                    if (location != null)
                                         locationName = location.getName();
                                 }
 
@@ -154,7 +152,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                 }
 
                                 // Actually this will never happen, since if filter order = unassigned, est time delivery WILL be null
-                                if(data.get("estimatedTimeOfDelivery")!=null && data.get("deliveryManUserID")==null){
+                                if (data.get("estimatedTimeOfDelivery") != null && data.get("deliveryManUserID") == null) {
                                     myPlacedOrders.add(
                                             new Order(
                                                     orderId,
@@ -170,8 +168,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                                     Integer.parseInt(data.get("status").toString())
                                             )
                                     );
-                                }
-                                else{
+                                } else {
                                     myPlacedOrders.add(
                                             new Order(
                                                     orderId,
@@ -192,14 +189,14 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                             }
                             adapter.notifyDataSetChanged();
                         } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.e(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 }
         );
     }
 
-    public void deleteOrder(String orderID){
+    public void deleteOrder(final String orderID) {
         MyApplication.db.collection("orders").document(orderID)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -207,12 +204,14 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
                         retrieveOrders();
+                        Snackbar.make(lv, "Deleted Order " + orderID, Snackbar.LENGTH_SHORT);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
+                        Log.e(TAG, "Error deleting document", e);
+                        Snackbar.make(lv, "Error deleting Order " + orderID + ". Please try again later.", Snackbar.LENGTH_SHORT);
                     }
                 });
     }
