@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MyPlacedOrdersActivity extends AppCompatActivity {
-    private ArrayList<String> myPlacedOrdersNames = new ArrayList<>();
+//    private ArrayList<String> myPlacedOrdersNames = new ArrayList<>();
     private ArrayList<Order> myPlacedOrders = new ArrayList<>();
     private static final String TAG = "MyPlacedOrdersActivity";
-    private static ArrayAdapter<String> adapter;
+    private static FulfilOrderItemAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +36,11 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
 
 
         // Initialize List View
-        ListView lv = (ListView) findViewById(R.id.my_orders_list);
-        adapter = new ArrayAdapter<String>(
+        ListView lv = (ListView) findViewById(R.id.my_placed_orders_list);
+        adapter = new FulfilOrderItemAdapter(
                 this,//context
-                R.layout.mylistlayout,//custom_layout
-                R.id.mylistitem, // referring the widget (TextView) where the items to be displayed
-                myPlacedOrdersNames //items
+                0, // referring the widget (TextView) where the items to be displayed
+                myPlacedOrders //items
         );
 
         lv.setAdapter(adapter);
@@ -90,7 +89,7 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            myPlacedOrdersNames.clear();
+//                            myPlacedOrdersNames.clear();
                             myPlacedOrders.clear();
                             // For each entry ie. order
                             for (DocumentSnapshot document : task.getResult()) {
@@ -170,10 +169,10 @@ public class MyPlacedOrdersActivity extends AppCompatActivity {
                                 }
 
                             }
-                            Log.d("TESTING2", myPlacedOrders.toString());
-                            for (Order o : myPlacedOrders) {
-                                myPlacedOrdersNames.add(o.getLocationName());
-                            }
+//                            Log.d("TESTING2", myPlacedOrders.toString());
+//                            for (Order o : myPlacedOrders) {
+//                                myPlacedOrdersNames.add(o.getLocationName());
+//                            }
                             adapter.notifyDataSetChanged();
 
 
