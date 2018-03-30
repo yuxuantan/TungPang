@@ -32,7 +32,7 @@ public class AddItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         quantityEditText = findViewById(R.id.quantity_et);
-        quantityEditText.setFilters(new InputFilter[]{ new MinMaxFilter("1", "20")});
+        quantityEditText.setFilters(new InputFilter[]{new MinMaxFilter("1", "20")});
 
         dynamicSpinner = findViewById(R.id.item_name);
 
@@ -42,7 +42,7 @@ public class AddItemActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: " + location.getMenu().getItems());
 
         itemNames = new ArrayList<>();
-        for(MenuItem item : menu.getItems()) {
+        for (MenuItem item : menu.getItems()) {
             itemNames.add(item.getName());
         }
 
@@ -81,16 +81,13 @@ public class AddItemActivity extends AppCompatActivity {
         Log.d(TAG, "addItem: Called.");
         Intent output = getIntent();
 
-        try{
+        try {
             MyApplication.pendingOrder.addMenuItem(selectedMenuItem, Integer.parseInt(quantityEditText.getText().toString()));
-        // Obtain Quantity
-//        it.putExtra("quantity", Integer.parseInt(quantityEditText.getText().toString()));
-        }catch(NumberFormatException ex){ // handle your exception
+        } catch (NumberFormatException ex) { // handle your exception
             back(view);
         }
-        // Return result
 
-        setResult(RESULT_OK,output);
+        setResult(RESULT_OK, output);
         finish();
     }
 
