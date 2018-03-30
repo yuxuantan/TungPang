@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mylistitem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/mylistitem"
-    android:columnCount="4">
+    android:paddingTop="@dimen/listItem_margin"
+    android:paddingBottom="@dimen/listItem_margin"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/fulfil_order_foodOutlet_Name"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:layout_width="260dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_column="0"
+        android:layout_columnWeight="3"
+        android:layout_marginLeft="@dimen/listItem_margin"
         android:layout_row="0"
-        android:text="SMU Noodle Shop (SOE)"
-        android:textSize="14sp"
-        android:textColor="@color/colorTextHeading"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fulfil_order_foodOutlet_Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SMU Noodle Shop (SOE)"
+            android:textColor="@color/colorTextHeading"
+            android:textSize="14sp" />
 
 
-    <TextView
-        android:id="@+id/fulfil_order_Meetup_location"
-        android:layout_height="wrap_content"
-        android:layout_width="260dp"
-        android:layout_column="0"
-        android:layout_row="1"
-        android:text="SIS Level 2 Lift landing"
-        android:textSize="12sp"
-        android:textColor="@color/colorTextHeading"/>
+        <TextView
+            android:id="@+id/fulfil_order_Meetup_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SIS Level 2 Lift landing"
+            android:textColor="@color/colorTextHeading"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/fulfil_order_details"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
-        android:layout_width="260dp"
-        android:layout_column="0"
-        android:layout_row="2"
-        android:text="Order: 1x Bak Chor Mee"
-        android:textSize="12sp"
-        android:scrollHorizontally="false"
-        android:textColor="@color/colorTextHeading"/>
+        <TextView
+            android:id="@+id/fulfil_order_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
+            android:text="Order: 1x Bak Chor Mee"
+            android:textColor="@color/colorTextHeading"
+            android:textSize="12sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/fulfil_order_TipAmount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="120dp"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
         android:layout_gravity="center_vertical"
-        android:layout_column="3"
-        android:text="$ 1.00"
+        android:layout_marginRight="@dimen/listItem_margin"
         android:layout_row="0"
-        android:layout_rowSpan="3"
+        android:gravity="right"
+        android:text="$ 1.00"
         android:textSize="18sp" />
 
-</GridLayout>
-    <!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
+</GridLayout><!-- android:checkMark="@drawable/ic_check_box_outline_blank_black_24dp" -->
